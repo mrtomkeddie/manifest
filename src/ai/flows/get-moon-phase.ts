@@ -18,6 +18,11 @@ const GetMoonPhaseInputSchema = z.object({
 });
 export type GetMoonPhaseInput = z.infer<typeof GetMoonPhaseInputSchema>;
 
+const GetMoonPhaseInternalInputSchema = z.object({
+  date: z.string(),
+  phaseName: z.string(),
+});
+
 const GetMoonPhaseOutputSchema = z.object({
   phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
   description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy."),
@@ -33,20 +38,18 @@ export async function getMoonPhase(input: GetMoonPhaseInput): Promise<GetMoonPha
 
 const prompt = ai.definePrompt({
   name: 'getMoonPhasePrompt',
-  input: {schema: GetMoonPhaseInputSchema},
+  input: {schema: GetMoonPhaseInternalInputSchema},
   output: {schema: GetMoonPhaseOutputSchema},
-  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and wants to know about the moon phase.
+  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and the corresponding moon phase.
 
-  Based on the date provided ({{{date}}}), determine the correct moon phase. The eight major phases are New Moon, Waxing Crescent, First Quarter, Waxing Gibbous, Full Moon, Waning Gibbous, Third Quarter, and Waning Crescent.
+  The moon phase for the date {{{date}}} is "{{{phaseName}}}".
   
-  Then, provide the following:
-  1.  The name of the moon phase.
+  Please provide the following based on this specific moon phase:
+  1.  The name of the moon phase (confirm it is "{{{phaseName}}}").
   2.  A 2-3 sentence spiritual interpretation of the energy of that phase.
   3.  A simple, actionable ritual suggestion for working with this energy.
   4.  A short, powerful affirmation that aligns with the phase.
   5.  One or two keywords for generating an image (e.g., "full moon", "waning crescent").
-  
-  Date: {{{date}}}
   
   Return the information in the specified format. Do not add any conversational text.`,
 });
@@ -57,8 +60,25 @@ const getMoonPhaseFlow = ai.defineFlow(
     inputSchema: GetMoonPhaseInputSchema,
     outputSchema: GetMoonPhaseOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async (input) => {
+    // Simple moon phase calculation
+    const date = new Date(input.date + 'T00:00:00Z');
+    const synodicMonth = 29.53058867;
+    const knownNewMoon = new Date('2000-01-06T18:14:00Z').getTime();
+    const daysSinceKnownNewMoon = (date.getTime() - knownNewMoon) / (1000 * 60 * 60 * 24);
+    const phase = (daysSinceKnownNewMoon % synodicMonth) / synodicMonth;
+
+    const phases = [
+      "New Moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous",
+      "Full Moon", "Waning Gibbous", "Third Quarter", "Waning Crescent"
+    ];
+    
+    // There are 8 phases, so we multiply by 8 and take the floor.
+    // We add 0.5 and take modulo 8 to center the phases.
+    const phaseIndex = Math.floor((phase * 8 + 0.5) % 8);
+    const phaseName = phases[phaseIndex];
+
+    const {output} = await prompt({ date: input.date, phaseName });
     return output!;
   }
 );
