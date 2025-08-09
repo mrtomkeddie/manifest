@@ -78,7 +78,7 @@ export function AngelNumberLookup() {
                 </div>
             )}
             {!isPending && result && (
-                <div className="space-y-6 text-base text-center text-foreground/90 animate-in fade-in duration-500">
+                <div className="space-y-6 text-base text-center text-foreground/90 animate-in fade-in duration-500 w-full">
                     <div>
                         <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
                         <p>{result.meaning}</p>
@@ -92,7 +92,7 @@ export function AngelNumberLookup() {
                 </div>
             )}
             {!isPending && !result && (
-                <div className="text-center text-foreground/60">
+                <div className="text-center text-foreground/60 w-full">
                     <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary/50" />
                     <p>The universe's guidance will appear here.</p>
                 </div>
