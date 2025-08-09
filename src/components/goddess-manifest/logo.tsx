@@ -9,14 +9,12 @@ export function Logo({ className }: { className?: string }) {
       className
     )}>
       <Image 
-        src="https://placehold.co/40x40.png" 
+        src="/logo2.png" 
         alt="Goddess Manifest Logo" 
-        width={40} 
+        width={120} 
         height={40}
         className="rounded-md"
-        data-ai-hint="logo"
       />
-      <span className="font-headline">Goddess Manifest</span>
     </Link>
   );
 }
