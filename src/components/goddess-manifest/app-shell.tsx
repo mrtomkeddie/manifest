@@ -51,7 +51,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           <SidebarHeader>
             <Logo />
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="px-2">
             <SidebarMenu className="my-2">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Home">
@@ -91,7 +91,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           </SidebarContent>
           <SidebarFooter>
             <SidebarSeparator />
-            <SidebarMenu className="my-2">
+            <SidebarMenu className="my-2 px-2">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Account">
                   <Link href="/account">
