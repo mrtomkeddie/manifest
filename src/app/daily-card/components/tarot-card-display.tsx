@@ -30,7 +30,7 @@ export function TarotCardDisplay() {
 
   if (!result && !isPending) {
     return (
-      <div className="flex flex-col items-center justify-center text-center min-h-[400px]">
+      <div className="w-full flex flex-col items-center justify-center text-center min-h-[400px]">
         <Sparkles className="w-16 h-16 text-primary/50 mb-4" />
         <h2 className="text-2xl font-headline text-foreground/90 mb-2">Ready to receive your message?</h2>
         <p className="text-foreground/70 mb-6">Click the button below to draw your daily tarot card.</p>
