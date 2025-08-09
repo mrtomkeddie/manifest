@@ -1,24 +1,18 @@
 import { AppShell } from '@/components/goddess-manifest/app-shell';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Moon } from 'lucide-react';
+import { MoonCalendar } from './components/moon-calendar';
 
 export default function MoonCalendarPage() {
   return (
     <AppShell title="Moon Calendar">
-       <Card className="w-full text-center bg-card/50">
-        <CardHeader className="items-center">
-          <Moon className="w-12 h-12 text-primary/80 mb-4" />
-          <CardTitle className="text-3xl font-headline">Feature Coming Soon</CardTitle>
-          <CardDescription className="text-lg">The Moon Calendar is charting its course.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-foreground/80">
-            Get ready to align your life with the magical cycles of the moon. Our interactive calendar with daily rituals and insights is currently under cosmic construction. Stay tuned for its luminous debut!
-          </p>
-          <Button variant="link" className="mt-4 text-primary">Keep Me Updated</Button>
-        </CardContent>
-      </Card>
+      <div className="flex flex-col w-full gap-8">
+        <div className="text-center">
+            <h1 className="text-4xl font-headline text-primary mb-2">Align with the Cosmos</h1>
+            <p className="text-foreground/80">
+              Discover the moon's current phase and how to harness its potent energy. Select a date to explore the lunar cycle.
+            </p>
+        </div>
+        <MoonCalendar />
+      </div>
     </AppShell>
   );
 }
