@@ -15,18 +15,20 @@ const GetMoonPhaseInputSchema = z.object({
   date: z
     .string()
     .describe('The date to get the moon phase for, in YYYY-MM-DD format.'),
+  isNorthernHemisphere: z.boolean().describe("Whether the user is in the Northern Hemisphere. This affects the visual appearance and some traditions."),
 });
 export type GetMoonPhaseInput = z.infer<typeof GetMoonPhaseInputSchema>;
 
 const GetMoonPhaseInternalInputSchema = z.object({
   date: z.string(),
   phaseName: z.string(),
+  isNorthernHemisphere: z.boolean(),
 });
 
 const GetMoonPhaseOutputSchema = z.object({
   phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
-  description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy."),
-  ritual: z.string().describe("A short, simple ritual suggestion for this moon phase."),
+  description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
+  ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
   affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
   imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
 });
@@ -40,16 +42,20 @@ const prompt = ai.definePrompt({
   name: 'getMoonPhasePrompt',
   input: {schema: GetMoonPhaseInternalInputSchema},
   output: {schema: GetMoonPhaseOutputSchema},
-  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and the corresponding moon phase.
+  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and their hemisphere to get information about the moon.
 
-  The moon phase for the date {{{date}}} is "{{{phaseName}}}".
+  The date is {{{date}}}.
+  The calculated moon phase is "{{{phaseName}}}".
+  The user is in the {{#if isNorthernHemisphere}}Northern{{else}}Southern{{/if}} Hemisphere.
   
-  Please provide the following based on this specific moon phase:
-  1.  The name of the moon phase (confirm it is "{{{phaseName}}}").
-  2.  A 2-3 sentence spiritual interpretation of the energy of that phase.
-  3.  A simple, actionable ritual suggestion for working with this energy.
+  Please provide the following based on this specific moon phase and location:
+  1.  Confirm the name of the moon phase: "{{{phaseName}}}".
+  2.  A 2-3 sentence spiritual interpretation of the energy of that phase, keeping the user's hemisphere in mind.
+  3.  A simple, actionable ritual suggestion for working with this energy, appropriate for their hemisphere.
   4.  A short, powerful affirmation that aligns with the phase.
   5.  One or two keywords for generating an image (e.g., "full moon", "waning crescent").
+
+  Also consider other astrological or numerological events for the given date, like the Lion's Gate on August 8th, and incorporate their influence into your interpretation if relevant.
   
   Return the information in the specified format. Do not add any conversational text.`,
 });
@@ -78,7 +84,7 @@ const getMoonPhaseFlow = ai.defineFlow(
     const phaseIndex = Math.floor((phase * 8 + 0.5) % 8);
     const phaseName = phases[phaseIndex];
 
-    const {output} = await prompt({ date: input.date, phaseName });
+    const {output} = await prompt({ date: input.date, phaseName, isNorthernHemisphere: input.isNorthernHemisphere });
     return output!;
   }
 );

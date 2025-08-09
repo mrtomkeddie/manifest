@@ -10,6 +10,8 @@ import { Loader2, Moon, Sparkles, Wand2, Calendar as CalendarIcon } from 'lucide
 import Image from 'next/image';
 import { Calendar } from "@/components/ui/calendar"
 import { format } from 'date-fns';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 function formatDate(date: Date) {
     return format(date, 'yyyy-MM-dd');
@@ -17,6 +19,7 @@ function formatDate(date: Date) {
 
 export function MoonCalendar() {
   const [date, setDate] = useState<Date>(new Date());
+  const [isNorthernHemisphere, setIsNorthernHemisphere] = useState(true);
   const [result, setResult] = useState<GetMoonPhaseOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -25,7 +28,7 @@ export function MoonCalendar() {
     startTransition(async () => {
       setResult(null);
       try {
-        const moonResult = await getMoonPhase({ date: formatDate(date) });
+        const moonResult = await getMoonPhase({ date: formatDate(date), isNorthernHemisphere });
         setResult(moonResult);
       } catch (e) {
         console.error(e);
@@ -36,13 +39,13 @@ export function MoonCalendar() {
         });
       }
     });
-  }, [date, toast]);
+  }, [date, isNorthernHemisphere, toast]);
 
   return (
     <div className="w-full">
         <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
             <div className="md:grid md:grid-cols-2">
-                <div className="p-6 flex flex-col items-center justify-center">
+                <div className="p-6 flex flex-col items-center justify-center gap-4">
                     <Calendar
                         mode="single"
                         selected={date}
@@ -50,6 +53,16 @@ export function MoonCalendar() {
                         className="rounded-md border"
                         disabled={isPending}
                     />
+                    <div className="flex items-center space-x-2 pt-4">
+                        <Label htmlFor="hemisphere-switch">Southern</Label>
+                        <Switch
+                            id="hemisphere-switch"
+                            checked={isNorthernHemisphere}
+                            onCheckedChange={setIsNorthernHemisphere}
+                            disabled={isPending}
+                        />
+                        <Label htmlFor="hemisphere-switch">Northern</Label>
+                    </div>
                 </div>
                 <div className="flex flex-col p-6">
                     {isPending && (
