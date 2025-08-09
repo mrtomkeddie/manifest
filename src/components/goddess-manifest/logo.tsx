@@ -11,8 +11,8 @@ export function Logo({ className }: { className?: string }) {
       <Image 
         src="/logo.png" 
         alt="Goddess Manifest Logo" 
-        width={350}
-        height={97}
+        width={250}
+        height={69}
         className="object-contain"
         priority 
       />
