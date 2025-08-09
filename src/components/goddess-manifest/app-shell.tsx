@@ -52,7 +52,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
             <Logo />
           </SidebarHeader>
           <SidebarContent>
-            <SidebarMenu>
+            <SidebarMenu className="my-2">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Home">
                   <Link href="/">
@@ -63,7 +63,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
               </SidebarMenuItem>
             </SidebarMenu>
             <SidebarSeparator />
-            <SidebarMenu>
+            <SidebarMenu className="my-2">
               {mainNav.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton asChild tooltip={item.label}>
@@ -76,7 +76,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
               ))}
             </SidebarMenu>
             <SidebarSeparator />
-            <SidebarMenu>
+            <SidebarMenu className="my-2">
               {premiumNav.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton asChild tooltip={item.label}>
@@ -91,7 +91,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           </SidebarContent>
           <SidebarFooter>
             <SidebarSeparator />
-            <SidebarMenu>
+            <SidebarMenu className="my-2">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Account">
                   <Link href="/account">
