@@ -62,15 +62,7 @@ export function MoonCalendar() {
                     {!isPending && result && (
                         <div className="space-y-6 text-base text-foreground/90 animate-in fade-in duration-500 w-full">
                             <div className='text-center'>
-                                <Image
-                                    src={`https://placehold.co/150x150.png`}
-                                    data-ai-hint={result.imageKeywords}
-                                    alt={result.phaseName}
-                                    width={150}
-                                    height={150}
-                                    className="rounded-full shadow-2xl shadow-primary/20 object-cover inline-block mb-4"
-                                />
-                                <h2 className="text-3xl font-headline text-primary">{result.phaseName}</h2>
+                                <h2 className="text-3xl font-headline text-primary mb-2">{result.phaseName}</h2>
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
                             </div>
                             
