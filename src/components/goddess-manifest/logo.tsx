@@ -13,7 +13,7 @@ export function Logo({ className }: { className?: string }) {
         alt="Goddess Manifest Logo" 
         width={120} 
         height={40}
-        className="rounded-md"
+        className=""
       />
     </Link>
   );
