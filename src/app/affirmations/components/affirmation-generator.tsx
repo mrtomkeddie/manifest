@@ -42,7 +42,7 @@ export function AffirmationGenerator() {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+    <Card className="w-full mx-auto bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
       <CardHeader>
         <div className="flex flex-col md:flex-row gap-4">
           <Select value={category} onValueChange={setCategory} disabled={isPending}>
