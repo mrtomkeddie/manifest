@@ -128,8 +128,7 @@ export default function Home() {
         
         <section 
           className="py-20 sm:py-32 relative bg-cover bg-center bg-no-repeat"
-          style={{backgroundImage: "url('https://placehold.co/1200x600.png')"}}
-          data-ai-hint="spiritual abstract"
+          style={{backgroundImage: "url('/background.png')"}}
         >
           <div className="absolute inset-0 bg-background/80"></div>
           <div className="container mx-auto px-4 text-center relative z-10">
