@@ -69,7 +69,7 @@ export function AngelNumberLookup() {
                 </Button>
             </div>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center w-full">
+        <CardContent className="flex flex-col items-center justify-center w-full gap-4">
             {isPending && (
                 <div className="flex flex-col items-center justify-center text-center p-6">
                     <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
@@ -78,19 +78,17 @@ export function AngelNumberLookup() {
                 </div>
             )}
             {!isPending && result && (
-                <div className="w-full p-6 space-y-4">
-                    <div className="space-y-4 text-base text-center text-foreground/90 animate-in fade-in duration-500 w-full">
-                        <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
+                <div className="w-full p-6 space-y-4 text-base text-center text-foreground/90 animate-in fade-in duration-500">
+                    <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
+                    <div>
+                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
+                        <p>{result.meaning}</p>
+                    </div>
                         <div>
-                            <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
-                            <p>{result.meaning}</p>
-                        </div>
-                            <div>
-                            <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
-                            <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-                                &quot;{result.affirmation}&quot;
-                            </p>
-                        </div>
+                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
+                        <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
+                            &quot;{result.affirmation}&quot;
+                        </p>
                     </div>
                 </div>
             )}
