@@ -6,7 +6,7 @@ import { Moon } from 'lucide-react';
 export default function MoonCalendarPage() {
   return (
     <AppShell title="Moon Calendar">
-       <Card className="max-w-2xl mx-auto text-center bg-card/50">
+       <Card className="w-full text-center bg-card/50">
         <CardHeader className="items-center">
           <Moon className="w-12 h-12 text-primary/80 mb-4" />
           <CardTitle className="text-3xl font-headline">Feature Coming Soon</CardTitle>

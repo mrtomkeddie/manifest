@@ -40,7 +40,7 @@ export default function PricingPage() {
           Elevate your spiritual practice and unlock your full potential. Choose the path that aligns with your soul's calling.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
           {plans.map(plan => (
             <Card key={plan.name} className={`flex flex-col bg-card/50 ${plan.isPopular ? 'border-primary shadow-2xl shadow-primary/10' : 'border-primary/20'}`}>
               <CardHeader className="items-center text-center">
