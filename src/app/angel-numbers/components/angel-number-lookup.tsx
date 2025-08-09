@@ -69,7 +69,7 @@ export function AngelNumberLookup() {
                 </Button>
             </div>
         </CardHeader>
-        <CardContent className="min-h-[250px] flex items-center justify-center p-6">
+        <CardContent className="flex flex-col items-center justify-center p-6 gap-8">
             {isPending && (
                 <div className="flex flex-col items-center justify-center text-center">
                     <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
@@ -93,7 +93,7 @@ export function AngelNumberLookup() {
                 </div>
             )}
             {!isPending && !result && (
-                <div className="text-center text-foreground/60 w-full">
+                <div className="text-center text-foreground/60 w-full py-12">
                     <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary/50" />
                     <p>The universe's guidance will appear here.</p>
                 </div>
