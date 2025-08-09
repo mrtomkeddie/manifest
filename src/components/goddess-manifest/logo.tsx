@@ -9,7 +9,7 @@ export function Logo({ className }: { className?: string }) {
       className
     )}>
       <Image 
-        src="/logo2.png" 
+        src="/logo.png" 
         alt="Goddess Manifest Logo" 
         width={120} 
         height={40}
