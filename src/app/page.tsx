@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Moon, Sparkles, Wand2 } from 'lucide-react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
 import { subscribeToMailerlite } from '@/app/actions';
-import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Logo } from '@/components/goddess-manifest/logo';
 
 function LeadCaptureForm() {
-  const [state, formAction] = useFormState(subscribeToMailerlite, { message: '', success: false });
+  const [state, formAction] = useActionState(subscribeToMailerlite, { message: '', success: false });
   const { pending } = useFormStatus();
   const { toast } = useToast();
 
