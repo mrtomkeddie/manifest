@@ -69,7 +69,7 @@ export function AngelNumberLookup() {
                 </Button>
             </div>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center p-6 gap-8">
+        <CardContent className="flex flex-col items-center justify-center p-6 gap-4">
             {isPending && (
                 <div className="flex flex-col items-center justify-center text-center">
                     <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
