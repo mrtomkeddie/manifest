@@ -69,33 +69,37 @@ export function AngelNumberLookup() {
                 </Button>
             </div>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center p-6 gap-4">
+        <CardContent className="flex flex-col items-center justify-center w-full">
             {isPending && (
-                <div className="flex flex-col items-center justify-center text-center">
+                <div className="flex flex-col items-center justify-center text-center p-6">
                     <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
                     <h2 className="text-xl font-headline text-foreground/90 mb-2">Consulting the Cosmos...</h2>
                     <p className="text-foreground/70">Uncovering the hidden message in your number.</p>
                 </div>
             )}
             {!isPending && result && (
-                <div className="space-y-8 text-base text-center text-foreground/90 animate-in fade-in duration-500 w-full">
-                    <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
-                    <div>
-                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
-                        <p>{result.meaning}</p>
-                    </div>
+                <div className="w-full p-6 space-y-4">
+                    <div className="space-y-4 text-base text-center text-foreground/90 animate-in fade-in duration-500 w-full">
+                        <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
                         <div>
-                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
-                        <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-                            &quot;{result.affirmation}&quot;
-                        </p>
+                            <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
+                            <p>{result.meaning}</p>
+                        </div>
+                            <div>
+                            <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
+                            <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
+                                &quot;{result.affirmation}&quot;
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}
             {!isPending && !result && (
-                <div className="text-center text-foreground/60 w-full py-12">
-                    <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary/50" />
-                    <p>The universe's guidance will appear here.</p>
+                <div className="flex flex-col items-center justify-center w-full text-center text-foreground/60 p-6 gap-4">
+                    <div className="py-12">
+                        <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary/50" />
+                        <p>The universe's guidance will appear here.</p>
+                    </div>
                 </div>
             )}
         </CardContent>
