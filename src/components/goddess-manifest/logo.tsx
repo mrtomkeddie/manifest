@@ -5,13 +5,14 @@ import Image from 'next/image';
 export function Logo({ className }: { className?: string }) {
   return (
     <Link href="/" className={cn(
-      "relative flex items-center h-28 w-96",
+      "flex items-center",
       className
     )}>
       <Image 
         src="/logo.png" 
         alt="Goddess Manifest Logo" 
-        fill
+        width={250}
+        height={70}
         className="object-contain"
       />
     </Link>
