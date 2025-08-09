@@ -48,9 +48,14 @@ const prompt = ai.definePrompt({
   The calculated moon phase is "{{{phaseName}}}".
   The user is in the {{#if isNorthernHemisphere}}Northern{{else}}Southern{{/if}} Hemisphere.
   
+  **Hemisphere-Specific Guidance is Crucial:**
+  - In the **Northern Hemisphere**, the moon "waxes" (grows) from right to left. The energy is about building, growth, and manifestation.
+  - In the **Southern Hemisphere**, the moon "waxes" (grows) from left to right. This hemisphere's traditions often associate the waxing visual with the waning energy of release, introspection, and letting go. The spiritual interpretation must be different.
+  - For example, a "Waxing Crescent" in the Northern Hemisphere is for setting new intentions. In the Southern Hemisphere, the equivalent visual phase might be a "Waning Crescent" energetically, and the guidance should focus on surrender and clearing space.
+
   Please provide the following based on this specific moon phase and location:
   1.  Confirm the name of the moon phase: "{{{phaseName}}}".
-  2.  A 2-3 sentence spiritual interpretation of the energy of that phase, keeping the user's hemisphere in mind.
+  2.  A 2-3 sentence spiritual interpretation of the energy of that phase, making sure it is **distinct and appropriate** for the user's hemisphere.
   3.  A simple, actionable ritual suggestion for working with this energy, appropriate for their hemisphere.
   4.  A short, powerful affirmation that aligns with the phase.
   5.  One or two keywords for generating an image (e.g., "full moon", "waning crescent").
