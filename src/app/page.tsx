@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Moon, Sparkles, Wand2 } from 'lucide-react';
+import { ArrowRight, Moon, Sparkles, Wand2, Star } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 import { useActionState, useEffect } from 'react';
 import { subscribeToMailerlite } from '@/app/actions';
@@ -57,9 +57,7 @@ const features = [
     link: '/affirmations',
   },
   {
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M14.5 9.5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3.5Z" /><path d="M18 16a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1Z" /><path d="M8 20a2 2 0 0 0-2-2h-1a2 2 0 0 0-2 2v-1a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-1Z" /></svg>
-    ),
+    icon: <Star className="h-8 w-8 text-primary" />,
     title: 'Angel Numbers',
     description: 'Decode the universe\'s messages. Look up the meanings behind repeating number sequences you encounter.',
     link: '/angel-numbers',
