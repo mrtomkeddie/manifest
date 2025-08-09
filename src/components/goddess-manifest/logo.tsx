@@ -14,6 +14,7 @@ export function Logo({ className }: { className?: string }) {
         width={250}
         height={70}
         className="object-contain"
+        priority // Adding priority to ensure it loads quickly
       />
     </Link>
   );
