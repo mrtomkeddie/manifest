@@ -78,7 +78,8 @@ export function AngelNumberLookup() {
                 </div>
             )}
             {!isPending && result && (
-                <div className="space-y-6 text-base text-center text-foreground/90 animate-in fade-in duration-500 w-full">
+                <div className="space-y-8 text-base text-center text-foreground/90 animate-in fade-in duration-500 w-full">
+                    <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
                     <div>
                         <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
                         <p>{result.meaning}</p>
