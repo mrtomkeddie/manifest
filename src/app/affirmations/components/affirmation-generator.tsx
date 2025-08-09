@@ -68,12 +68,7 @@ export function AffirmationGenerator() {
         </div>
       </CardHeader>
       <CardContent className="min-h-[150px] flex items-center justify-center p-6">
-        {isPending ? (
-          <div className="flex items-center text-lg text-foreground/70">
-            <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-            Manifesting...
-          </div>
-        ) : result ? (
+        {result ? (
           <p className="text-2xl md:text-3xl font-headline text-center font-semibold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
             "{result.affirmation}"
           </p>
