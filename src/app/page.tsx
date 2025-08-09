@@ -86,7 +86,7 @@ export default function Home() {
 
       <main>
         <section className="relative min-h-screen flex items-center justify-center text-center p-4 overflow-hidden">
-          <div className="absolute inset-0 bg-background bg-grid-primary/5 [mask-image:linear-gradient(to_bottom,white_20%,transparent_100%)]"></div>
+          <div className="absolute inset-0 bg-background bg-grid-primary/10 [mask-image:linear-gradient(to_bottom,white_20%,transparent_100%)]"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
           
           <div className="relative z-10 flex flex-col items-center space-y-8">
