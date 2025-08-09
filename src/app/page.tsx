@@ -126,8 +126,13 @@ export default function Home() {
           </div>
         </section>
         
-        <section className="py-20 sm:py-32 bg-card/50">
-          <div className="container mx-auto px-4 text-center">
+        <section 
+          className="py-20 sm:py-32 relative bg-cover bg-center bg-no-repeat"
+          style={{backgroundImage: "url('https://placehold.co/1200x600.png')"}}
+          data-ai-hint="spiritual abstract"
+        >
+          <div className="absolute inset-0 bg-background/80"></div>
+          <div className="container mx-auto px-4 text-center relative z-10">
              <h2 className="text-4xl md:text-5xl font-headline text-center mb-6">Join the Goddess Circle</h2>
              <p className="max-w-3xl mx-auto text-lg text-foreground/80 mb-12">
               Elevate your practice with premium readings, a private journal, exclusive downloads, and live community events. Become the conscious creator of your reality.
