@@ -1,9 +1,9 @@
 'use server';
 
 /**
- * @fileOverview An AI agent for providing moon phase information.
+ * @fileOverview An AI agent for providing moon phase and astrological information.
  *
- * - getMoonPhase - A function that returns details about the moon phase for a given date.
+ * - getMoonPhase - A function that returns details for a given date.
  * - GetMoonPhaseInput - The input type for the getMoonPhase function.
  * - GetMoonPhaseOutput - The return type for the getMoonPhase function.
  */
@@ -26,14 +26,23 @@ const GetMoonPhaseInternalInputSchema = z.object({
 });
 
 const GetMoonPhaseOutputSchema = z.object({
-  phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
-  description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
-  ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
-  affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
-  astrologicalInfluence: z.string().describe('Shows the current moon sign (e.g., "Moon in Capricorn") and explains how its energy affects emotions, intuition, and manifestation in 1-2 sentences.'),
-  manifestationAction: z.string().describe('A 1-2 sentence daily tip tying the moon phase and astrology into a practical manifestation step.'),
   imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
+  moonReading: z.object({
+    phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
+    description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
+    ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
+    affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
+  }),
+  starsReading: z.object({
+    signAndAspects: z.string().describe('The current moon sign and any major planetary aspects (e.g., "Moon in Capricorn", "Moon in Aquarius square Uranus").'),
+    influence: z.string().describe("A 2-3 sentence explanation of how this sign’s energy affects emotions, intuition, and manifestation."),
+    practicalTip: z.string().describe('A 1-2 sentence practical tip based on the astrological influence.'),
+  }),
+  combinedReading: z.object({
+    insight: z.string().describe("A 1-2 sentence insight that merges the moon phase and astrological influence into a single 'what this means for you today' message."),
+  }),
 });
+
 export type GetMoonPhaseOutput = z.infer<typeof GetMoonPhaseOutputSchema>;
 
 export async function getMoonPhase(input: GetMoonPhaseInput): Promise<GetMoonPhaseOutput> {
@@ -44,7 +53,7 @@ const prompt = ai.definePrompt({
   name: 'getMoonPhasePrompt',
   input: {schema: GetMoonPhaseInternalInputSchema},
   output: {schema: GetMoonPhaseOutputSchema},
-  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and their hemisphere to get information about the moon.
+  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and their hemisphere to get a reading.
 
   The date is {{{date}}}.
   The calculated moon phase is "{{{phaseName}}}".
@@ -53,17 +62,25 @@ const prompt = ai.definePrompt({
   **Hemisphere-Specific Guidance is Crucial:**
   - In the **Northern Hemisphere**, the moon "waxes" (grows) from right to left. The energy is about building, growth, and manifestation.
   - In the **Southern Hemisphere**, the moon "waxes" (grows) from left to right. This hemisphere's traditions often associate the waxing visual with the waning energy of release, introspection, and letting go. The spiritual interpretation must be different.
-  - For example, a "Waxing Crescent" in the Northern Hemisphere is for setting new intentions. In the Southern Hemisphere, the equivalent visual phase might be a "Waning Crescent" energetically, and the guidance should focus on surrender and clearing space.
 
-  Please provide the following based on this specific moon phase and location:
-  1.  Confirm the name of the moon phase: "{{{phaseName}}}".
-  2.  A 2-3 sentence spiritual interpretation of the energy of that phase, making sure it is **distinct and appropriate** for the user's hemisphere.
-  3.  A simple, actionable ritual suggestion for working with this energy, appropriate for their hemisphere.
-  4.  A short, powerful affirmation that aligns with the phase.
-  5.  **Astrological Influence**: Determine the moon's zodiac sign for the given date. Explain its influence on emotions and manifestation in 1-2 sentences.
-  6.  **Manifestation Action**: Provide a practical 1-2 sentence action for the day that combines the energy of the moon phase and its astrological sign.
-  7.  One or two keywords for generating an image (e.g., "full moon", "waning crescent").
+  Please provide a reading structured into three parts: A Moon Reading, a Stars Reading, and a Combined Reading.
 
+  **1. Moon Reading:** (Focus only on the Moon Phase)
+    -   **phaseName**: Confirm the phase name: "{{{phaseName}}}".
+    -   **description**: A 2-3 sentence spiritual interpretation of the energy of that phase, making sure it is **distinct and appropriate** for the user's hemisphere.
+    -   **ritual**: A simple, actionable ritual suggestion for working with this energy.
+    -   **affirmation**: A short, powerful affirmation that aligns with the phase.
+
+  **2. Stars Reading:** (Focus only on the Astrology for the given date)
+    -   **signAndAspects**: Determine the moon's zodiac sign and any major planetary aspects for the given date (e.g., "Moon in Capricorn", "Moon in Aquarius square Uranus").
+    -   **influence**: Explain how this astrological energy affects emotions, creativity, communication, or manifestation in 2-3 sentences.
+    -   **practicalTip**: Provide a practical 1-2 sentence tip based on the day's astrological influence.
+
+  **3. Combined Reading:** (Merge the two influences)
+    -   **insight**: A concise 1-2 sentence insight that merges the moon phase and astrological influence into a single "what this means for you today" message.
+  
+  Finally, provide **imageKeywords** for the moon phase (e.g., "full moon", "waning crescent").
+  
   Also consider other astrological or numerological events for the given date, like the Lion's Gate on August 8th, and incorporate their influence into your interpretation if relevant.
   
   Return the information in the specified format. Do not add any conversational text.`,
