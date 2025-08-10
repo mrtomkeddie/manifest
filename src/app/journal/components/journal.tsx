@@ -18,6 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Calendar } from '@/components/ui/calendar';
 
 
 interface JournalEntry {
@@ -31,6 +32,7 @@ export function Journal() {
   const [newEntry, setNewEntry] = useState('');
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [editingContent, setEditingContent] = useState('');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [isMounted, setIsMounted] = useState(false);
   const { toast } = useToast();
 
@@ -73,13 +75,7 @@ export function Journal() {
     }
     const newEntryObject: JournalEntry = {
       id: new Date().toISOString(),
-      date: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      date: new Date().toISOString(),
       content: newEntry,
     };
     setEntries([newEntryObject, ...entries]);
@@ -121,42 +117,67 @@ export function Journal() {
         description: 'Your journal entry has been successfully updated.',
     });
   };
+
+  const filteredEntries = entries.filter(entry => {
+    if (!selectedDate) return true;
+    const entryDate = new Date(entry.date);
+    return entryDate.toDateString() === selectedDate.toDateString();
+  }).sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
   if (!isMounted) {
     return null; // or a loading spinner
   }
 
   return (
-    <div className="space-y-8">
-      <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-        <CardHeader>
-          <CardTitle>New Entry</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={newEntry}
-            onChange={(e) => setNewEntry(e.target.value)}
-            placeholder="What's on your mind?..."
-            rows={6}
-            className="text-base"
-          />
-        </CardContent>
-        <CardFooter>
-          <Button onClick={handleAddEntry}>
-            <PlusCircle className="mr-2" />
-            Save Entry
-          </Button>
-        </CardFooter>
-      </Card>
+    <div className="grid md:grid-cols-3 gap-8">
+      <div className="md:col-span-1 flex flex-col gap-8">
+        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+            <CardHeader>
+                <CardTitle>Browse Entries</CardTitle>
+            </CardHeader>
+            <CardContent className="flex justify-center">
+                <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className="rounded-md border"
+                />
+            </CardContent>
+        </Card>
+        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+            <CardHeader>
+            <CardTitle>Today's Entry</CardTitle>
+            </CardHeader>
+            <CardContent>
+            <Textarea
+                value={newEntry}
+                onChange={(e) => setNewEntry(e.target.value)}
+                placeholder="What's on your mind?..."
+                rows={6}
+                className="text-base"
+            />
+            </CardContent>
+            <CardFooter>
+            <Button onClick={handleAddEntry}>
+                <PlusCircle className="mr-2" />
+                Save Entry
+            </Button>
+            </CardFooter>
+        </Card>
+      </div>
 
-      <div className="space-y-6">
-        <h2 className="text-3xl font-headline text-center text-primary">Past Entries</h2>
-        {entries.length > 0 ? (
-          entries.map((entry) => (
+      <div className="md:col-span-2 space-y-6">
+        <h2 className="text-3xl font-headline text-center text-primary">
+            Entries for {selectedDate ? selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'All Dates'}
+        </h2>
+        {filteredEntries.length > 0 ? (
+          filteredEntries.map((entry) => (
             <Card key={entry.id} className="bg-card/50 border-primary/10">
               <CardHeader>
                 <CardTitle className="text-xl flex justify-between items-center">
-                  <span className="font-normal text-foreground/80">{entry.date}</span>
+                  <span className="font-normal text-foreground/80">
+                    {new Date(entry.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
                   <div className="flex items-center gap-2">
                     {editingEntryId === entry.id ? (
                         <>
@@ -212,7 +233,7 @@ export function Journal() {
           ))
         ) : (
           <div className="text-center py-12 text-foreground/60">
-            <p>Your past journal entries will appear here.</p>
+            <p>No journal entries for this date.</p>
           </div>
         )}
       </div>
