@@ -46,7 +46,7 @@ export function AngelNumberLookup() {
   }
 
   return (
-    <div className="w-full max-w-none">
+    <div className="!w-screen !max-w-none !min-w-0 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
         <Card className="w-full max-w-none !max-w-none bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
         <CardHeader>
             <div className="flex flex-col md:flex-row gap-4">
