@@ -42,19 +42,21 @@ export function MoonCalendar() {
     });
   };
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     handleGetReading();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // We only want this to run on the initial load.
+  // Subsequent reads will be triggered by the button.
   }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1 flex flex-col gap-8">
-            <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5 flex flex-col">
+            <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
                 <CardHeader>
                     <CardTitle>Select Date</CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-1 justify-center items-center">
+                <CardContent className="flex justify-center">
                     <Calendar
                         mode="single"
                         selected={date}
@@ -154,7 +156,7 @@ export function MoonCalendar() {
                                 <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
                                     <Star />
                                     Stars Reading
-                                </Title>
+                                </CardTitle>
                                 <CardDescription>{result.starsReading.signAndAspects}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
