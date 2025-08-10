@@ -112,9 +112,18 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          <header className="flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-6 sticky top-0 z-10">
-            <SidebarTrigger className="md:hidden" />
-            <h1 className="text-xl font-headline font-semibold text-foreground/90">{title}</h1>
+          <header className="sticky top-0 z-10">
+            {/* full-bleed bar that ignores any max-width parents */}
+            <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-background/80 backdrop-blur-sm border-b">
+              <div className="mx-auto px-6">
+                <div className="flex h-16 items-center gap-4">
+                  <SidebarTrigger className="md:hidden" />
+                  <h1 className="text-xl font-headline font-semibold text-foreground/90">
+                    {title}
+                  </h1>
+                </div>
+              </div>
+            </div>
           </header>
           <main className="p-4 sm:p-6 lg:p-8 flex-1 min-w-0 w-full max-w-none">
             {children}
