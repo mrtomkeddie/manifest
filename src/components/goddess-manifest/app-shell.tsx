@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import {
   Sheet,
@@ -23,6 +25,8 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '../ui/button';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const mainNav = [
   { href: '/daily-card', icon: <Sparkles />, label: 'Daily Card' },
@@ -44,6 +48,8 @@ const footerNav = [
 ]
 
 export function AppShell({ children, title }: { children: ReactNode; title: string }) {
+  const pathname = usePathname();
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6 z-50">
@@ -61,7 +67,13 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                 </SheetTitle>
               </SheetHeader>
                 <nav className="grid gap-2 text-lg font-medium mt-4">
-                    <Link href="/" className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
+                    <Link 
+                        href="/" 
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/" && "text-primary"
+                        )}
+                    >
                         <Home className="h-5 w-5" />
                         Home
                     </Link>
@@ -69,7 +81,10 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                            className={cn(
+                                "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
+                                pathname === item.href && "text-primary"
+                            )}
                         >
                             {item.icon}
                             {item.label}
@@ -80,7 +95,10 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                          <Link
                             key={item.href}
                             href={item.href}
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                            className={cn(
+                                "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
+                                pathname === item.href && "text-primary"
+                            )}
                         >
                             {item.icon}
                             {item.label}
@@ -94,7 +112,10 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                                className={cn(
+                                    "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
+                                    pathname === item.href && "text-primary"
+                                )}
                             >
                                 {item.icon}
                                 {item.label}
