@@ -56,12 +56,11 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
               <SheetHeader>
-                <SheetTitle>Main Menu</SheetTitle>
+                <SheetTitle>
+                  <Logo />
+                </SheetTitle>
               </SheetHeader>
                 <nav className="grid gap-2 text-lg font-medium mt-4">
-                    <div className="flex items-center gap-2 text-lg font-semibold mb-4">
-                        <Logo />
-                    </div>
                     <Link href="/" className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
                         <Home className="h-5 w-5" />
                         Home
@@ -105,7 +104,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                 </div>
             </SheetContent>
         </Sheet>
-        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-start">
             <h1 className="text-xl font-headline font-semibold text-foreground/90">{title}</h1>
         </div>
       </header>
