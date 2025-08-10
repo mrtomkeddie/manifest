@@ -23,6 +23,7 @@ import {
   Home,
   Menu,
   Feather,
+  LayoutDashboard,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '../ui/button';
@@ -30,7 +31,8 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const mainNav = [
-  { href: '/daily-card', icon: <Sparkles />, label: 'Tarot Cards' },
+  { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
+  { href: '/tarot-cards', icon: <Sparkles />, label: 'Tarot Cards' },
   { href: '/daily-reading', icon: <Feather />, label: 'Daily Reading' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
