@@ -29,11 +29,11 @@ const mainNav = [
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
   { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
+  { href: '/journal', icon: <BookMarked />, label: 'Journal' },
 ];
 
 const premiumNav = [
   { href: '/pricing', icon: <Gem />, label: 'Go Premium' },
-  { href: '/members/journal', icon: <BookMarked />, label: 'Journal', premium: true },
   { href: '/members/downloads', icon: <Download />, label: 'Downloads', premium: true },
   { href: '/members/events', icon: <Calendar />, label: 'Events', premium: true },
 ];
@@ -45,22 +45,23 @@ const footerNav = [
 
 export function AppShell({ children, title }: { children: ReactNode; title: string }) {
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6 z-50">
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="shrink-0">
+                <Button variant="outline" size="icon" className="shrink-0 md:hidden">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Toggle navigation menu</span>
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
-                <SheetHeader>
-                    <SheetTitle className="text-left">
-                        <Logo />
-                    </SheetTitle>
-                </SheetHeader>
+              <SheetHeader>
+                <SheetTitle>Main Menu</SheetTitle>
+              </SheetHeader>
                 <nav className="grid gap-2 text-lg font-medium mt-4">
+                    <div className="flex items-center gap-2 text-lg font-semibold mb-4">
+                        <Logo />
+                    </div>
                     <Link href="/" className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
                         <Home className="h-5 w-5" />
                         Home
@@ -104,7 +105,15 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                 </div>
             </SheetContent>
         </Sheet>
-        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+        <div className="hidden md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          <Logo />
+          {mainNav.map((item) => (
+            <Link key={item.href} href={item.href} className="text-muted-foreground transition-colors hover:text-foreground">
+              {item.label}
+            </Link>
+          ))}
+        </div>
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
             <h1 className="text-xl font-headline font-semibold text-foreground/90">{title}</h1>
         </div>
       </header>
