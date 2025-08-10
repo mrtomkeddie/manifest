@@ -1,17 +1,9 @@
 import Link from 'next/link';
 import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarSeparator,
-  SidebarTrigger,
-  SidebarFooter,
-} from '@/components/ui/sidebar';
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Logo } from './logo';
 import {
   Sparkles,
@@ -25,6 +17,7 @@ import {
   LogOut,
   Star,
   Home,
+  Menu,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '../ui/button';
@@ -43,86 +36,77 @@ const premiumNav = [
   { href: '/members/events', icon: <Calendar />, label: 'Events', premium: true },
 ];
 
+const footerNav = [
+    { href: '/account', icon: <User />, label: 'Account' },
+    { href: '/logout', icon: <LogOut />, label: 'Logout' },
+]
+
 export function AppShell({ children, title }: { children: ReactNode; title: string }) {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen">
-        <Sidebar>
-          <SidebarHeader className="p-4">
-            <Logo />
-          </SidebarHeader>
-          <SidebarContent className="px-2">
-            <SidebarMenu className="my-2">
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Home">
-                  <Link href="/">
-                    <Home />
-                    <span>Home</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-            <SidebarSeparator />
-            <SidebarMenu className="my-2">
-              {mainNav.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton asChild tooltip={item.label}>
-                    <Link href={item.href}>
-                      {item.icon}
-                      <span>{item.label}</span>
+    <div className="flex min-h-screen w-full flex-col">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="shrink-0">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="flex flex-col">
+                <nav className="grid gap-2 text-lg font-medium">
+                    <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
+                        <Logo />
                     </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-            <SidebarSeparator />
-            <SidebarMenu className="my-2">
-              {premiumNav.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton asChild tooltip={item.label}>
-                    <Link href={item.href}>
-                      {item.icon}
-                      <span>{item.label}</span>
+                    <Link href="/" className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
+                        <Home className="h-5 w-5" />
+                        Home
                     </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarContent>
-          <SidebarFooter>
-            <SidebarSeparator />
-            <SidebarMenu className="my-2 px-2">
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Account">
-                  <Link href="/account">
-                    <User />
-                    <span>Account</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Logout">
-                  <Link href="/logout">
-                    <LogOut />
-                    <span>Logout</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInset>
-          <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-6 backdrop-blur-sm">
-            <SidebarTrigger className="md:hidden" />
-            <h1 className="text-xl font-headline font-semibold text-foreground/90">
-              {title}
-            </h1>
-          </header>
-          <main className="p-4 sm:p-6 lg:p-8 flex-1 min-w-0 w-full max-w-none">
-            {children}
-          </main>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+                    {mainNav.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                        >
+                            {item.icon}
+                            {item.label}
+                        </Link>
+                    ))}
+                     <hr className="my-4" />
+                    {premiumNav.map((item) => (
+                         <Link
+                            key={item.href}
+                            href={item.href}
+                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                        >
+                            {item.icon}
+                            {item.label}
+                        </Link>
+                    ))}
+                </nav>
+                <div className="mt-auto">
+                    <nav className="grid gap-2 text-lg font-medium">
+                        <hr className="my-4" />
+                        {footerNav.map((item) => (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                            >
+                                {item.icon}
+                                {item.label}
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
+            </SheetContent>
+        </Sheet>
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+            <h1 className="text-xl font-headline font-semibold text-foreground/90">{title}</h1>
+        </div>
+      </header>
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        {children}
+      </main>
+    </div>
   );
 }
