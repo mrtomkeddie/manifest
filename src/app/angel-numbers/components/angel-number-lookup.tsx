@@ -2,6 +2,7 @@
 'use client';
 import { useState, useTransition } from 'react';
 import { getAngelNumberMeaning, type AngelNumberOutput } from '@/ai/flows/get-angel-number-meaning';
+import { getDailyAngelNumber } from '@/ai/flows/get-daily-angel-number';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -15,8 +16,8 @@ export function AngelNumberLookup() {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const handleLookup = () => {
-    if (!number) {
+  const handleLookup = (numberToLookup: string) => {
+    if (!numberToLookup) {
         toast({
             title: 'No number entered',
             description: 'Please enter a number sequence to look up.',
@@ -27,9 +28,9 @@ export function AngelNumberLookup() {
     startTransition(async () => {
       setResult(null);
       try {
-        const meaningResult = await getAngelNumberMeaning({ number });
+        const meaningResult = await getAngelNumberMeaning({ number: numberToLookup });
         setResult(meaningResult);
-        setDisplayedNumber(number);
+        setDisplayedNumber(numberToLookup);
       } catch (e) {
         console.error(e);
         toast({
@@ -41,9 +42,27 @@ export function AngelNumberLookup() {
     });
   };
 
+  const handleGenerateDailyNumber = () => {
+    startTransition(async () => {
+        setResult(null);
+        setNumber(''); // Clear input field
+        try {
+            const { number: dailyNumber } = await getDailyAngelNumber();
+            handleLookup(dailyNumber);
+        } catch (e) {
+            console.error(e);
+            toast({
+                title: 'Error',
+                description: 'Could not generate a daily number. Please try again later.',
+                variant: 'destructive',
+            });
+        }
+    });
+  }
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleLookup();
+      handleLookup(number);
     }
   }
 
@@ -61,13 +80,17 @@ export function AngelNumberLookup() {
                     className="h-12 text-base"
                     disabled={isPending}
                 />
-                <Button onClick={handleLookup} disabled={isPending} className="h-12 text-base w-full md:w-auto">
+                <Button onClick={() => handleLookup(number)} disabled={isPending} className="h-12 text-base w-full md:w-auto">
                     {isPending ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     ) : (
                     <Search className="mr-2 h-5 w-5" />
                     )}
                     {isPending ? 'Searching...' : 'Find Meaning'}
+                </Button>
+                <Button onClick={handleGenerateDailyNumber} disabled={isPending} variant="outline" className="h-12 text-base w-full md:w-auto">
+                    <Wand2 className="mr-2 h-5 w-5" />
+                    Get Today's Number
                 </Button>
             </div>
         </CardHeader>
