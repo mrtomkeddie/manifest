@@ -116,7 +116,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
             <SidebarTrigger className="md:hidden" />
             <h1 className="text-xl font-headline font-semibold text-foreground/90">{title}</h1>
           </header>
-          <main className="p-4 sm:p-6 lg:p-8 flex-1">
+          <main className="p-4 sm:p-6 lg:p-8 flex-1 min-w-0">
             {children}
           </main>
         </SidebarInset>
