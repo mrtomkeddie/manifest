@@ -22,6 +22,7 @@ import {
   Star,
   Home,
   Menu,
+  Feather,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '../ui/button';
@@ -30,6 +31,7 @@ import { cn } from '@/lib/utils';
 
 const mainNav = [
   { href: '/daily-card', icon: <Sparkles />, label: 'Daily Card' },
+  { href: '/daily-reading', icon: <Feather />, label: 'Daily Reading' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
   { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
