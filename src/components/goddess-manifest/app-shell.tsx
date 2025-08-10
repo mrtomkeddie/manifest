@@ -33,7 +33,6 @@ import { cn } from '@/lib/utils';
 const mainNav = [
   { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
   { href: '/tarot-cards', icon: <Sparkles />, label: 'Tarot Cards' },
-  { href: '/daily-reading', icon: <Feather />, label: 'Daily Reading' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
   { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
