@@ -49,7 +49,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6 z-50">
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+                <Button variant="outline" size="icon" className="shrink-0">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Toggle navigation menu</span>
                 </Button>
@@ -105,14 +105,6 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                 </div>
             </SheetContent>
         </Sheet>
-        <div className="hidden md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-          <Logo />
-          {mainNav.map((item) => (
-            <Link key={item.href} href={item.href} className="text-muted-foreground transition-colors hover:text-foreground">
-              {item.label}
-            </Link>
-          ))}
-        </div>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
             <h1 className="text-xl font-headline font-semibold text-foreground/90">{title}</h1>
         </div>
