@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 
 export function AngelNumberLookup() {
   const [number, setNumber] = useState('');
+  const [displayedNumber, setDisplayedNumber] = useState('');
   const [result, setResult] = useState<AngelNumberOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -28,6 +29,7 @@ export function AngelNumberLookup() {
       try {
         const meaningResult = await getAngelNumberMeaning({ number });
         setResult(meaningResult);
+        setDisplayedNumber(number);
       } catch (e) {
         console.error(e);
         toast({
@@ -79,7 +81,7 @@ export function AngelNumberLookup() {
             )}
             {!isPending && result && (
                 <div className="w-full p-6 space-y-4 text-base text-center text-foreground/90 animate-in fade-in duration-500">
-                    <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
+                    <h2 className="text-6xl font-headline text-primary tracking-widest">{displayedNumber}</h2>
                     <div>
                         <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
                         <p>{result.meaning}</p>
