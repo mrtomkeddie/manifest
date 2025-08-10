@@ -1,33 +1,40 @@
+
 import { getDailyReading } from '@/ai/flows/get-daily-reading';
 import { drawTarotCard } from '@/ai/flows/draw-tarot-card';
 import { getDailyAngelNumber } from '@/ai/flows/get-daily-angel-number';
 import { getAngelNumberMeaning } from '@/ai/flows/get-angel-number-meaning';
 import { getMoonPhase } from '@/ai/flows/get-moon-phase';
+import { generateAffirmation } from '@/ai/flows/generate-affirmation';
 import { format } from 'date-fns';
 import { DailyReadingCard } from './daily-reading-card';
 import { TarotCard } from './tarot-card';
 import { TodaysAngelNumberCard } from './todays-angel-number-card';
 import { TodaysMoonPhaseCard } from './todays-moon-phase-card';
-import { AffirmationGenerator } from '@/app/affirmations/components/affirmation-generator';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wand2 } from 'lucide-react';
+import { TodaysAffirmationCard } from './todays-affirmation-card';
+
+const affirmationCategories = ['Love', 'Confidence', 'Abundance', 'Calm', 'Health', 'Success'];
 
 export async function Dashboard() {
   const dailyReadingPromise = getDailyReading();
   const tarotCardPromise = drawTarotCard();
   const dailyAngelNumberPromise = getDailyAngelNumber();
   const moonPhasePromise = getMoonPhase({ date: format(new Date(), 'yyyy-MM-dd'), isNorthernHemisphere: true });
+  
+  const randomCategory = affirmationCategories[Math.floor(Math.random() * affirmationCategories.length)].toLowerCase();
+  const affirmationPromise = generateAffirmation({ category: randomCategory });
 
   const [
     dailyReading,
     tarotCard,
     dailyAngelNumber,
-    moonPhase
+    moonPhase,
+    affirmation
   ] = await Promise.all([
     dailyReadingPromise,
     tarotCardPromise,
     dailyAngelNumberPromise,
-    moonPhasePromise
+    moonPhasePromise,
+    affirmationPromise
   ]);
   
   const angelNumberMeaning = await getAngelNumberMeaning({ number: dailyAngelNumber.number });
@@ -43,18 +50,7 @@ export async function Dashboard() {
         <TodaysMoonPhaseCard moonPhase={moonPhase} />
       </div>
        <div className="lg:col-span-2">
-        <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-headline text-2xl text-primary">
-                    <Wand2 />
-                    Affirmation Generator
-                </CardTitle>
-                <CardDescription>Generate a new affirmation to carry with you today.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <AffirmationGenerator />
-            </CardContent>
-        </Card>
+        <TodaysAffirmationCard affirmation={affirmation.affirmation} />
       </div>
     </div>
   );
