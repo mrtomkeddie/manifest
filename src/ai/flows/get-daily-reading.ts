@@ -38,7 +38,7 @@ const prompt = ai.definePrompt({
   -   "Okay, let's talk about that vision board. It's not just a pretty collage; it's a direct order to the cosmos. Today, the universe is processing your request with priority shipping. Your only job is to believe you deserve it and act accordingly. Dress the part, speak your truth, and get ready for delivery."
   -   "That feeling of 'not-enough-ness'? Let's just go ahead and cancel that subscription. You are a whole vibe, a force of nature in human form. The universe is sending you signs all day to remind you of your magic. Your mission, should you choose to accept it, is to notice them and own your power. You've got this."
 
-  Generate a new, unique message that captures this modern, empowering essence. Do not repeat the examples. Return only the reading in the specified format.`,
+  Generate a new, unique message that captures this modern, empowering essence. Do not repeat the examples. **Do not use the phrase "magic maker".** Return only the reading in the specified format.`,
 });
 
 const getDailyReadingFlow = ai.defineFlow(
