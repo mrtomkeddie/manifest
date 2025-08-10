@@ -6,12 +6,11 @@ import { getMoonPhase, type GetMoonPhaseOutput } from '@/ai/flows/get-moon-phase
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Moon, Sparkles, Wand2, Calendar as CalendarIcon } from 'lucide-react';
-import Image from 'next/image';
-import { Calendar } from "@/components/ui/calendar"
+import { Loader2, Moon, Sparkles, Wand2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Calendar } from "@/components/ui/calendar"
 
 function formatDate(date: Date) {
     return format(date, 'yyyy-MM-dd');
@@ -29,9 +28,8 @@ export function MoonCalendar() {
     setDate(new Date());
   }, []);
 
-  useEffect(() => {
-    if (!date) return; // Don't run if the date isn't set yet
-
+  const handleGetReading = () => {
+    if (!date) return;
     startTransition(async () => {
       setResult(null);
       try {
@@ -46,7 +44,7 @@ export function MoonCalendar() {
         });
       }
     });
-  }, [date, isNorthernHemisphere, toast]);
+  };
 
   return (
     <div className="w-full">
@@ -71,17 +69,25 @@ export function MoonCalendar() {
                         />
                         <Label htmlFor="hemisphere-switch">Northern</Label>
                     </div>
+                     <Button onClick={handleGetReading} disabled={isPending || !date} className="mt-4 h-12 text-base">
+                        {isPending ? (
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        ) : (
+                            <Wand2 className="mr-2 h-5 w-5" />
+                        )}
+                        {isPending ? 'Consulting...' : 'Get Moon Reading'}
+                    </Button>
                 </div>
-                <div className="flex flex-col items-center justify-center p-8 md:p-12">
-                    {(isPending || !date) && (
-                        <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
+                <div className="flex flex-col items-center justify-center p-8 md:p-12 min-h-[400px]">
+                    {isPending && (
+                        <div className="flex flex-col items-center justify-center text-center p-6">
                             <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
                             <h2 className="text-xl font-headline text-foreground/90 mb-2">Reading the Stars...</h2>
                             {date && <p className="text-foreground/70">Determining the lunar energy for {format(date, 'PPP')}.</p>}
                         </div>
                     )}
                     {!isPending && result && date && (
-                        <div className="text-center w-full space-y-8 text-base text-foreground/90 animate-in fade-in duration-500">
+                        <div className="w-full space-y-8 text-foreground/90 animate-in fade-in duration-500 text-center">
                             <div>
                                 <h2 className="text-4xl font-headline text-primary mb-1">{result.phaseName}</h2>
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
@@ -101,6 +107,13 @@ export function MoonCalendar() {
                                     &quot;{result.affirmation}&quot;
                                 </p>
                             </div>
+                        </div>
+                    )}
+                    {!isPending && !result && (
+                        <div className="text-center text-foreground/60">
+                            <Moon className="w-16 h-16 mx-auto mb-4 text-primary/50" />
+                            <h2 className="text-2xl font-headline">Select a date</h2>
+                            <p>Choose a date and your hemisphere to reveal the moon's guidance.</p>
                         </div>
                     )}
                 </div>
