@@ -129,9 +129,8 @@ export function Journal() {
   }
 
   return (
-    <div className="grid md:grid-cols-3 gap-8">
-      <div className="md:col-span-2 space-y-6">
-        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+    <div className="flex flex-col gap-8">
+        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5 w-full">
             <CardHeader>
             <CardTitle>Today's Entry</CardTitle>
             </CardHeader>
@@ -151,8 +150,25 @@ export function Journal() {
             </Button>
             </CardFooter>
         </Card>
-        
-        <div className="space-y-6">
+
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-1 flex flex-col gap-8">
+            <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+                <CardHeader>
+                    <CardTitle>Browse Entries</CardTitle>
+                </CardHeader>
+                <CardContent className="flex justify-center">
+                    <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        className="rounded-md border"
+                    />
+                </CardContent>
+            </Card>
+        </div>
+      
+        <div className="md:col-span-2 space-y-6">
             <h2 className="text-3xl font-headline text-center text-primary">
                 Entries for {selectedDate ? selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'All Dates'}
             </h2>
@@ -224,23 +240,6 @@ export function Journal() {
             )}
         </div>
       </div>
-      
-      <div className="md:col-span-1 flex flex-col gap-8">
-        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-            <CardHeader>
-                <CardTitle>Browse Entries</CardTitle>
-            </CardHeader>
-            <CardContent className="flex justify-center">
-                <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="rounded-md border"
-                />
-            </CardContent>
-        </Card>
-      </div>
-
     </div>
   );
 }
