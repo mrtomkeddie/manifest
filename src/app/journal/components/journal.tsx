@@ -130,20 +130,7 @@ export function Journal() {
 
   return (
     <div className="grid md:grid-cols-3 gap-8">
-      <div className="md:col-span-1 flex flex-col gap-8">
-        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-            <CardHeader>
-                <CardTitle>Browse Entries</CardTitle>
-            </CardHeader>
-            <CardContent className="flex justify-center">
-                <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="rounded-md border"
-                />
-            </CardContent>
-        </Card>
+      <div className="md:col-span-2 space-y-6">
         <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
             <CardHeader>
             <CardTitle>Today's Entry</CardTitle>
@@ -164,79 +151,96 @@ export function Journal() {
             </Button>
             </CardFooter>
         </Card>
-      </div>
+        
+        <div className="space-y-6">
+            <h2 className="text-3xl font-headline text-center text-primary">
+                Entries for {selectedDate ? selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'All Dates'}
+            </h2>
+            {filteredEntries.length > 0 ? (
+            filteredEntries.map((entry) => (
+                <Card key={entry.id} className="bg-card/50 border-primary/10">
+                <CardHeader>
+                    <CardTitle className="text-xl flex justify-between items-center">
+                    <span className="font-normal text-foreground/80">
+                        {new Date(entry.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                    <div className="flex items-center gap-2">
+                        {editingEntryId === entry.id ? (
+                            <>
+                                <Button variant="ghost" size="icon" onClick={handleUpdateEntry}>
+                                    <Save className="h-5 w-5 text-primary" />
+                                </Button>
+                                <Button variant="ghost" size="icon" onClick={handleCancelEditing}>
+                                    <XCircle className="h-5 w-5 text-muted-foreground" />
+                                </Button>
+                            </>
+                        ) : (
+                            <Button variant="ghost" size="icon" onClick={() => handleStartEditing(entry)}>
+                                <Edit className="h-5 w-5 text-muted-foreground" />
+                            </Button>
+                        )}
+                        
+                        <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Trash2 className="h-5 w-5 text-destructive/80" />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your journal entry.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteEntry(entry.id)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                        </AlertDialog>
 
-      <div className="md:col-span-2 space-y-6">
-        <h2 className="text-3xl font-headline text-center text-primary">
-            Entries for {selectedDate ? selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'All Dates'}
-        </h2>
-        {filteredEntries.length > 0 ? (
-          filteredEntries.map((entry) => (
-            <Card key={entry.id} className="bg-card/50 border-primary/10">
-              <CardHeader>
-                <CardTitle className="text-xl flex justify-between items-center">
-                  <span className="font-normal text-foreground/80">
-                    {new Date(entry.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                  <div className="flex items-center gap-2">
+                    </div>
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
                     {editingEntryId === entry.id ? (
-                        <>
-                            <Button variant="ghost" size="icon" onClick={handleUpdateEntry}>
-                                <Save className="h-5 w-5 text-primary" />
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={handleCancelEditing}>
-                                <XCircle className="h-5 w-5 text-muted-foreground" />
-                            </Button>
-                        </>
+                        <Textarea 
+                            value={editingContent}
+                            onChange={(e) => setEditingContent(e.target.value)}
+                            rows={5}
+                            className="text-base"
+                        />
                     ) : (
-                        <Button variant="ghost" size="icon" onClick={() => handleStartEditing(entry)}>
-                            <Edit className="h-5 w-5 text-muted-foreground" />
-                        </Button>
+                        <p className="text-base whitespace-pre-wrap text-foreground/90">{entry.content}</p>
                     )}
-                    
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Trash2 className="h-5 w-5 text-destructive/80" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your journal entry.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDeleteEntry(entry.id)}>Delete</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {editingEntryId === entry.id ? (
-                    <Textarea 
-                        value={editingContent}
-                        onChange={(e) => setEditingContent(e.target.value)}
-                        rows={5}
-                        className="text-base"
-                    />
-                ) : (
-                    <p className="text-base whitespace-pre-wrap text-foreground/90">{entry.content}</p>
-                )}
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-12 text-foreground/60">
-            <p>No journal entries for this date.</p>
-          </div>
-        )}
+                </CardContent>
+                </Card>
+            ))
+            ) : (
+            <div className="text-center py-12 text-foreground/60">
+                <p>No journal entries for this date.</p>
+            </div>
+            )}
+        </div>
       </div>
+      
+      <div className="md:col-span-1 flex flex-col gap-8">
+        <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+            <CardHeader>
+                <CardTitle>Browse Entries</CardTitle>
+            </CardHeader>
+            <CardContent className="flex justify-center">
+                <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className="rounded-md border"
+                />
+            </CardContent>
+        </Card>
+      </div>
+
     </div>
   );
 }
