@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Wand2, Loader2 } from 'lucide-react';
 
-const categories = ['Love', 'Confidence', 'Abundance', 'Calm', 'Health', 'Success'];
+const categories = ['Random', 'Love', 'Confidence', 'Abundance', 'Calm', 'Health', 'Success'];
+const affirmationCategories = categories.slice(1);
 
 export function AffirmationGenerator() {
   const [category, setCategory] = useState(categories[0].toLowerCase());
@@ -18,7 +19,11 @@ export function AffirmationGenerator() {
   const handleGenerate = () => {
     startTransition(async () => {
       try {
-        const affirmationResult = await generateAffirmation({ category });
+        let finalCategory = category;
+        if (finalCategory === 'random') {
+          finalCategory = affirmationCategories[Math.floor(Math.random() * affirmationCategories.length)].toLowerCase();
+        }
+        const affirmationResult = await generateAffirmation({ category: finalCategory });
         setResult(affirmationResult);
       } catch (e) {
         console.error(e);
