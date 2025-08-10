@@ -55,7 +55,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
-              <SheetHeader>
+              <SheetHeader className="text-left">
                 <SheetTitle>
                   <Logo />
                 </SheetTitle>
