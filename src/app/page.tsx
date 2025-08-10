@@ -46,9 +46,9 @@ function LeadCaptureForm() {
 const features = [
   {
     icon: <Sparkles className="h-8 w-8 text-primary" />,
-    title: 'Tarot Card Draw',
+    title: 'Tarot Cards',
     description: 'Start your day with insight. Pull a card from our digital tarot deck for guidance and reflection.',
-    link: '/daily-card',
+    link: '/tarot-cards',
   },
   {
     icon: <Wand2 className="h-8 w-8 text-primary" />,
@@ -64,7 +64,7 @@ const features = [
   },
   {
     icon: <Moon className="h-8 w-8 text-primary" />,
-    title: 'Moon Phase Calendar',
+    title: 'Moon & Stars',
     description: 'Align with lunar cycles. Discover rituals and intentions for each phase of the moon.',
     link: '/moon',
   },

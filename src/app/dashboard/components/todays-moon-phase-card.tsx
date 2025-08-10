@@ -53,7 +53,7 @@ export function TodaysMoonPhaseCard({ moonPhase }: TodaysMoonPhaseCardProps) {
             </CardContent>
             <CardFooter>
                 <Button variant="link" asChild>
-                    <Link href="/moon">View Moon Calendar</Link>
+                    <Link href="/moon">View Moon & Stars</Link>
                 </Button>
             </CardFooter>
         </Card>

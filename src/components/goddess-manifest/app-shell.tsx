@@ -35,7 +35,7 @@ const mainNav = [
   { href: '/tarot-cards', icon: <Sparkles />, label: 'Tarot Cards' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
-  { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
+  { href: '/moon', icon: <Moon />, label: 'Moon & Stars' },
   { href: '/journal', icon: <BookMarked />, label: 'Journal' },
 ];
 
