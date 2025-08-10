@@ -18,13 +18,20 @@ function formatDate(date: Date) {
 }
 
 export function MoonCalendar() {
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | undefined>();
   const [isNorthernHemisphere, setIsNorthernHemisphere] = useState(true);
   const [result, setResult] = useState<GetMoonPhaseOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   useEffect(() => {
+    // This effect runs once on mount to set the initial date on the client.
+    setDate(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (!date) return; // Don't run if the date isn't set yet
+
     startTransition(async () => {
       setResult(null);
       try {
@@ -51,7 +58,8 @@ export function MoonCalendar() {
                         selected={date}
                         onSelect={(d) => d && setDate(d)}
                         className="rounded-md"
-                        disabled={isPending}
+                        disabled={isPending || !date}
+                        initialFocus
                     />
                     <div className="flex items-center space-x-2 pt-4">
                         <Label htmlFor="hemisphere-switch">Southern</Label>
@@ -65,15 +73,15 @@ export function MoonCalendar() {
                     </div>
                 </div>
                 <div className="flex flex-col items-center justify-center p-8 md:p-12">
-                    {isPending && (
+                    {(isPending || !date) && (
                         <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
                             <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
                             <h2 className="text-xl font-headline text-foreground/90 mb-2">Reading the Stars...</h2>
-                            <p className="text-foreground/70">Determining the lunar energy for {format(date, 'PPP')}.</p>
+                            {date && <p className="text-foreground/70">Determining the lunar energy for {format(date, 'PPP')}.</p>}
                         </div>
                     )}
-                    {!isPending && result && (
-                        <div className="text-center w-full max-w-md mx-auto space-y-8 text-base text-foreground/90 animate-in fade-in duration-500">
+                    {!isPending && result && date && (
+                        <div className="text-center w-full space-y-8 text-base text-foreground/90 animate-in fade-in duration-500">
                             <div>
                                 <h2 className="text-4xl font-headline text-primary mb-1">{result.phaseName}</h2>
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
