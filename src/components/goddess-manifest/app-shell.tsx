@@ -54,9 +54,9 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                     <span className="sr-only">Toggle navigation menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col">
+            <SheetContent side="left" className="flex flex-col w-[300px]">
               <SheetHeader className="text-left">
-                <SheetTitle>
+                <SheetTitle className="text-left">
                   <Logo />
                 </SheetTitle>
               </SheetHeader>
