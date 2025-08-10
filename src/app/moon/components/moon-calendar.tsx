@@ -45,12 +45,12 @@ export function MoonCalendar() {
     <div className="w-full">
         <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
             <div className="md:grid md:grid-cols-2">
-                <div className="p-6 flex flex-col items-center justify-center gap-4">
+                <div className="p-6 flex flex-col items-center justify-center gap-4 border-b md:border-b-0 md:border-r border-primary/10">
                     <Calendar
                         mode="single"
                         selected={date}
                         onSelect={(d) => d && setDate(d)}
-                        className="rounded-md border"
+                        className="rounded-md"
                         disabled={isPending}
                     />
                     <div className="flex items-center space-x-2 pt-4">
@@ -64,7 +64,7 @@ export function MoonCalendar() {
                         <Label htmlFor="hemisphere-switch">Northern</Label>
                     </div>
                 </div>
-                <div className="flex flex-col items-center justify-center p-6">
+                <div className="flex flex-col items-center justify-center p-8 md:p-12">
                     {isPending && (
                         <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
                             <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
@@ -73,23 +73,23 @@ export function MoonCalendar() {
                         </div>
                     )}
                     {!isPending && result && (
-                        <div className="text-center space-y-6 text-base text-foreground/90 animate-in fade-in duration-500">
+                        <div className="text-center w-full max-w-md mx-auto space-y-8 text-base text-foreground/90 animate-in fade-in duration-500">
                             <div>
-                                <h2 className="text-3xl font-headline text-primary mb-2">{result.phaseName}</h2>
+                                <h2 className="text-4xl font-headline text-primary mb-1">{result.phaseName}</h2>
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
                             </div>
                             
                             <div>
                                 <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Energy & Meaning</h3>
-                                <p>{result.description}</p>
+                                <p className="text-foreground/80">{result.description}</p>
                             </div>
                             <div>
                                 <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Ritual</h3>
-                                <p>{result.ritual}</p>
+                                <p className="text-foreground/80">{result.ritual}</p>
                             </div>
                             <div>
                                 <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
-                                <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
+                                <p className="font-semibold text-xl text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
                                     &quot;{result.affirmation}&quot;
                                 </p>
                             </div>
