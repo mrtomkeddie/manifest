@@ -109,7 +109,9 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
         </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        {children}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+        </div>
       </main>
     </div>
   );
