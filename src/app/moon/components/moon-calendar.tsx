@@ -82,9 +82,6 @@ export function MoonCalendar() {
                     </div>
                 </CardContent>
              </Card>
-        </div>
-
-        <div className="md:col-span-2 space-y-8">
             <Button onClick={handleGetReading} disabled={isPending || !date} className="h-12 text-base w-full">
                 {isPending ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -93,7 +90,9 @@ export function MoonCalendar() {
                 )}
                 {isPending ? 'Consulting...' : 'Get Reading'}
             </Button>
+        </div>
 
+        <div className="md:col-span-2 space-y-8">
             {isPending && (
                 <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
                     <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
