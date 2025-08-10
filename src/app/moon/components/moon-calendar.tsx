@@ -73,7 +73,7 @@ export function MoonCalendar() {
                         </div>
                     )}
                     {!isPending && result && (
-                        <div className="space-y-6 text-base text-foreground/90 animate-in fade-in duration-500 w-full text-center">
+                        <div className="space-y-6 text-base text-foreground/90 animate-in fade-in duration-500 text-center">
                             <div>
                                 <h2 className="text-3xl font-headline text-primary mb-2">{result.phaseName}</h2>
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
