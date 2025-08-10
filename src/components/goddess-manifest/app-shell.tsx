@@ -30,7 +30,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const mainNav = [
-  { href: '/daily-card', icon: <Sparkles />, label: 'Daily Card' },
+  { href: '/daily-card', icon: <Sparkles />, label: 'Tarot Cards' },
   { href: '/daily-reading', icon: <Feather />, label: 'Daily Reading' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },

@@ -46,7 +46,7 @@ function LeadCaptureForm() {
 const features = [
   {
     icon: <Sparkles className="h-8 w-8 text-primary" />,
-    title: 'Daily Card Draw',
+    title: 'Tarot Card Draw',
     description: 'Start your day with insight. Pull a card from our digital tarot deck for guidance and reflection.',
     link: '/daily-card',
   },
