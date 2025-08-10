@@ -176,6 +176,11 @@ const Sidebar = React.forwardRef<
     ref
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const [isClient, setIsClient] = React.useState(false)
+
+    React.useEffect(() => {
+      setIsClient(true)
+    }, [])
 
     if (collapsible === "none") {
       return (
@@ -188,6 +193,20 @@ const Sidebar = React.forwardRef<
           {...props}
         >
           {children}
+        </div>
+      )
+    }
+    
+    // Render a placeholder on the server and during the initial client render
+    if (!isClient) {
+      return (
+        <div
+          className={cn(
+            "hidden md:block w-[--sidebar-width]",
+            "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
+             className
+          )}
+        >
         </div>
       )
     }
