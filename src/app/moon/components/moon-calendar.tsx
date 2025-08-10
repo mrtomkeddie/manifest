@@ -48,131 +48,140 @@ export function MoonCalendar() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col gap-8">
-        <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-            <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center justify-center">
-                    <div className="lg:col-span-1 flex justify-center">
-                         <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={(d) => d && setDate(d)}
-                            className="rounded-md border"
-                            disabled={isPending || !date}
-                            initialFocus
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-1 flex flex-col gap-8">
+            <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+                <CardHeader>
+                    <CardTitle>Select Date</CardTitle>
+                </CardHeader>
+                <CardContent className="flex justify-center">
+                        <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={(d) => d && setDate(d)}
+                        className="rounded-md border"
+                        disabled={isPending || !date}
+                        initialFocus
+                    />
+                </CardContent>
+            </Card>
+             <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+                <CardHeader>
+                    <CardTitle>Select Hemisphere</CardTitle>
+                </CardHeader>
+                <CardContent className="flex justify-center">
+                    <div className="flex items-center space-x-2">
+                        <Label htmlFor="hemisphere-switch">Southern</Label>
+                        <Switch
+                            id="hemisphere-switch"
+                            checked={isNorthernHemisphere}
+                            onCheckedChange={setIsNorthernHemisphere}
+                            disabled={isPending}
                         />
+                        <Label htmlFor="hemisphere-switch">Northern</Label>
                     </div>
-                    <div className="lg:col-span-2 flex flex-col items-center justify-center gap-6">
-                        <div className="flex items-center space-x-2">
-                            <Label htmlFor="hemisphere-switch">Southern</Label>
-                            <Switch
-                                id="hemisphere-switch"
-                                checked={isNorthernHemisphere}
-                                onCheckedChange={setIsNorthernHemisphere}
-                                disabled={isPending}
-                            />
-                            <Label htmlFor="hemisphere-switch">Northern</Label>
-                        </div>
-                        <Button onClick={handleGetReading} disabled={isPending || !date} className="h-12 text-base w-full max-w-xs">
-                            {isPending ? (
-                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            ) : (
-                                <Wand2 className="mr-2 h-5 w-5" />
-                            )}
-                            {isPending ? 'Consulting...' : 'Get Reading'}
-                        </Button>
-                    </div>
+                </CardContent>
+             </Card>
+        </div>
+
+        <div className="md:col-span-2 space-y-8">
+            <Button onClick={handleGetReading} disabled={isPending || !date} className="h-12 text-base w-full">
+                {isPending ? (
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                    <Wand2 className="mr-2 h-5 w-5" />
+                )}
+                {isPending ? 'Consulting...' : 'Get Reading'}
+            </Button>
+
+            {isPending && (
+                <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
+                    <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
+                    <h2 className="text-xl font-headline text-foreground/90 mb-2">Reading the Stars...</h2>
+                    {date && <p className="text-foreground/70">Determining the cosmic energy for {format(date, 'PPP')}.</p>}
                 </div>
-            </CardContent>
-        </Card>
-
-        {isPending && (
-            <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
-                <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
-                <h2 className="text-xl font-headline text-foreground/90 mb-2">Reading the Stars...</h2>
-                {date && <p className="text-foreground/70">Determining the cosmic energy for {format(date, 'PPP')}.</p>}
-            </div>
-        )}
-        
-        {!isPending && result && date && (
-            <div className="w-full space-y-8 text-foreground/90 animate-in fade-in duration-500">
-                
-                {/* Combined Reading */}
-                <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
-                            <Sparkles />
-                            Today's Combined Insight
-                        </CardTitle>
-                        <CardDescription>{format(date, 'PPP')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-lg md:text-xl text-foreground/90">
-                            {result.combinedReading.insight}
-                        </p>
-                    </CardContent>
-                </Card>
-
-                <div className="grid md:grid-cols-2 gap-8">
-                    {/* Moon Reading */}
-                    <Card className="w-full bg-card/50 border-primary/10 shadow-lg shadow-primary/5">
+            )}
+            
+            {!isPending && result && date && (
+                <div className="w-full space-y-8 text-foreground/90 animate-in fade-in duration-500">
+                    
+                    {/* Combined Reading */}
+                    <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
-                                <Moon />
-                                Moon Reading
+                                <Sparkles />
+                                Today's Combined Insight
                             </CardTitle>
-                            <CardDescription>{result.moonReading.phaseName}</CardDescription>
+                            <CardDescription>{format(date, 'PPP')}</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                             <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Energy & Meaning</h3>
-                                <p className="text-foreground/80">{result.moonReading.description}</p>
-                            </div>
-                            <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Ritual</h3>
-                                <p className="text-foreground/80">{result.moonReading.ritual}</p>
-                            </div>
-                             <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Affirmation</h3>
-                                <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-                                    &quot;{result.moonReading.affirmation}&quot;
-                                </p>
-                            </div>
+                        <CardContent>
+                            <p className="text-lg md:text-xl text-foreground/90">
+                                {result.combinedReading.insight}
+                            </p>
                         </CardContent>
                     </Card>
 
-                    {/* Stars Reading */}
-                     <Card className="w-full bg-card/50 border-primary/10 shadow-lg shadow-primary/5">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
-                                <Star />
-                                Stars Reading
-                            </CardTitle>
-                            <CardDescription>{result.starsReading.signAndAspects}</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                             <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Astrological Influence</h3>
-                                <p className="text-foreground/80">{result.starsReading.influence}</p>
-                            </div>
-                            <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Practical Tip</h3>
-                                <p className="text-foreground/80">{result.starsReading.practicalTip}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Moon Reading */}
+                        <Card className="w-full bg-card/50 border-primary/10 shadow-lg shadow-primary/5">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
+                                    <Moon />
+                                    Moon Reading
+                                </CardTitle>
+                                <CardDescription>{result.moonReading.phaseName}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Energy & Meaning</h3>
+                                    <p className="text-foreground/80">{result.moonReading.description}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Ritual</h3>
+                                    <p className="text-foreground/80">{result.moonReading.ritual}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Affirmation</h3>
+                                    <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
+                                        &quot;{result.moonReading.affirmation}&quot;
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Stars Reading */}
+                        <Card className="w-full bg-card/50 border-primary/10 shadow-lg shadow-primary/5">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
+                                    <Star />
+                                    Stars Reading
+                                </CardTitle>
+                                <CardDescription>{result.starsReading.signAndAspects}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Astrological Influence</h3>
+                                    <p className="text-foreground/80">{result.starsReading.influence}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Practical Tip</h3>
+                                    <p className="text-foreground/80">{result.starsReading.practicalTip}</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
                 </div>
+            )}
 
-            </div>
-        )}
-
-        {!isPending && !result && (
-            <div className="text-center text-foreground/60 min-h-[300px] flex flex-col justify-center items-center">
-                <Moon className="w-16 h-16 mx-auto mb-4 text-primary/50" />
-                <h2 className="text-2xl font-headline">Select a date</h2>
-                <p>Choose a date and your hemisphere to reveal the cosmic guidance.</p>
-            </div>
-        )}
+            {!isPending && !result && (
+                <div className="text-center text-foreground/60 min-h-[300px] flex flex-col justify-center items-center">
+                    <Moon className="w-16 h-16 mx-auto mb-4 text-primary/50" />
+                    <h2 className="text-2xl font-headline">Select a date</h2>
+                    <p>Choose a date and your hemisphere to reveal the cosmic guidance.</p>
+                </div>
+            )}
+        </div>
     </div>
   );
 }
