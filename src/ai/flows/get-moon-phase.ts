@@ -30,6 +30,8 @@ const GetMoonPhaseOutputSchema = z.object({
   description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
   ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
   affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
+  astrologicalInfluence: z.string().describe('Shows the current moon sign (e.g., "Moon in Capricorn") and explains how its energy affects emotions, intuition, and manifestation in 1-2 sentences. Mention that the moon sign changes every ~2.5 days.'),
+  manifestationAction: z.string().describe('A 1-2 sentence daily tip tying the moon phase and astrology into a practical manifestation step.'),
   imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
 });
 export type GetMoonPhaseOutput = z.infer<typeof GetMoonPhaseOutputSchema>;
@@ -58,7 +60,9 @@ const prompt = ai.definePrompt({
   2.  A 2-3 sentence spiritual interpretation of the energy of that phase, making sure it is **distinct and appropriate** for the user's hemisphere.
   3.  A simple, actionable ritual suggestion for working with this energy, appropriate for their hemisphere.
   4.  A short, powerful affirmation that aligns with the phase.
-  5.  One or two keywords for generating an image (e.g., "full moon", "waning crescent").
+  5.  **Astrological Influence**: Determine the moon's zodiac sign for the given date. Explain its influence on emotions and manifestation in 1-2 sentences. Crucially, mention that the moon sign changes every ~2.5 days, so readings may be similar for a couple of days.
+  6.  **Manifestation Action**: Provide a practical 1-2 sentence action for the day that combines the energy of the moon phase and its astrological sign.
+  7.  One or two keywords for generating an image (e.g., "full moon", "waning crescent").
 
   Also consider other astrological or numerological events for the given date, like the Lion's Gate on August 8th, and incorporate their influence into your interpretation if relevant.
   

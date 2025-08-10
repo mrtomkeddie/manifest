@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Calendar } from "@/components/ui/calendar"
+import { Separator } from '@/components/ui/separator';
 
 function formatDate(date: Date) {
     return format(date, 'yyyy-MM-dd');
@@ -93,19 +94,33 @@ export function MoonCalendar() {
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
                             </div>
                             
-                            <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Energy & Meaning</h3>
-                                <p className="text-foreground/80">{result.description}</p>
-                            </div>
-                            <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Ritual</h3>
-                                <p className="text-foreground/80">{result.ritual}</p>
-                            </div>
-                            <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
-                                <p className="font-semibold text-xl text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-                                    &quot;{result.affirmation}&quot;
-                                </p>
+                            <div className="space-y-6 text-left">
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2 text-center">Energy & Meaning</h3>
+                                    <p className="text-foreground/80 text-center">{result.description}</p>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2 text-center">Ritual</h3>
+                                    <p className="text-foreground/80 text-center">{result.ritual}</p>
+                                </div>
+                                 <Separator />
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2 text-center">Astrological Influence</h3>
+                                    <p className="text-foreground/80 text-center">{result.astrologicalInfluence}</p>
+                                </div>
+                                 <Separator />
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2 text-center">Manifestation Action</h3>
+                                    <p className="text-foreground/80 text-center">{result.manifestationAction}</p>
+                                </div>
+                                 <Separator />
+                                <div>
+                                    <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2 text-center">Affirmation</h3>
+                                    <p className="font-semibold text-xl text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400 text-center">
+                                        &quot;{result.affirmation}&quot;
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     )}
