@@ -1,18 +1,22 @@
-import { AppShell } from '@/components/goddess-manifest/app-shell';
-import { AngelNumberLookup } from './components/angel-number-lookup';
+import { AppShell } from '@/components/goddess-manifest/app-shell'
+import { AngelNumberLookup } from './components/angel-number-lookup'
 
 export default function AngelNumbersPage() {
   return (
     <AppShell title="Angel Numbers">
-      <div className="flex flex-col w-full items-stretch gap-8">
+      {/* Full-width, no cross-axis alignment, no caps */}
+      <div className="flex flex-col w-full gap-8">
+        {/* Only the heading is centered and capped */}
         <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl font-headline text-primary mb-2">Decode the Signs</h1>
-            <p className="text-foreground/80">
-              Are you seeing repeating numbers? Enter the sequence below to uncover the universe's message for you.
-            </p>
+          <h1 className="text-4xl font-headline text-primary mb-2">Decode the Signs</h1>
+          <p className="text-foreground/80">
+            Are you seeing repeating numbers? Enter the sequence below to uncover the universe's message for you.
+          </p>
         </div>
+
+        {/* Lookup area sits directly under a full-width flex column */}
         <AngelNumberLookup />
       </div>
     </AppShell>
-  );
+  )
 }
