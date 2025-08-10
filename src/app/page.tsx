@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Moon, Sparkles, Wand2, Star } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { subscribeToMailerlite } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Logo } from '@/components/goddess-manifest/logo';
@@ -71,6 +71,12 @@ const features = [
 ];
 
 export default function Home() {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <div className="flex-1 w-full">
       <header className="absolute top-0 left-0 right-0 z-20 p-4 bg-transparent">
@@ -143,7 +149,7 @@ export default function Home() {
 
       <footer className="py-8 bg-background border-t border-primary/10">
         <div className="container mx-auto px-4 text-center text-foreground/60">
-          <p>&copy; {new Date().getFullYear()} Goddess Manifest. All Rights Reserved.</p>
+          <p>&copy; {year || new Date().getFullYear()} Goddess Manifest. All Rights Reserved.</p>
         </div>
       </footer>
     </div>
