@@ -5,7 +5,7 @@ import Image from 'next/image';
 export function Logo({ className }: { className?: string }) {
   return (
     <Link href="/" className={cn(
-      "flex items-center justify-center",
+      "flex items-center justify-start",
       className
     )}>
       <Image 
