@@ -80,9 +80,9 @@ export function AngelNumberLookup() {
                 </div>
             )}
             {!isPending && result && (
-                <div className="w-full p-6 space-y-4 text-base text-center text-foreground/90 animate-in fade-in duration-500">
-                    <h2 className="text-6xl font-headline text-primary tracking-widest">{displayedNumber}</h2>
-                    <div>
+                <div className="w-full p-6 text-base text-center text-foreground/90 animate-in fade-in duration-500">
+                    <h2 className="text-6xl font-headline text-primary tracking-widest mb-8">{displayedNumber}</h2>
+                    <div className="mb-8">
                         <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
                         <p>{result.meaning}</p>
                     </div>
