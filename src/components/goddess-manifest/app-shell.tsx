@@ -48,7 +48,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
     <SidebarProvider>
       <div className="flex min-h-screen">
         <Sidebar>
-          <SidebarHeader>
+          <SidebarHeader className="p-4">
             <Logo />
           </SidebarHeader>
           <SidebarContent className="px-2">
