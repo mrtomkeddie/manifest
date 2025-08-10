@@ -64,7 +64,7 @@ export function MoonCalendar() {
                         <Label htmlFor="hemisphere-switch">Northern</Label>
                     </div>
                 </div>
-                <div className="flex flex-col p-6">
+                <div className="flex flex-col items-center justify-center p-6">
                     {isPending && (
                         <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
                             <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
@@ -73,8 +73,8 @@ export function MoonCalendar() {
                         </div>
                     )}
                     {!isPending && result && (
-                        <div className="space-y-6 text-base text-foreground/90 animate-in fade-in duration-500 w-full">
-                            <div className='text-center'>
+                        <div className="space-y-6 text-base text-foreground/90 animate-in fade-in duration-500 w-full text-center">
+                            <div>
                                 <h2 className="text-3xl font-headline text-primary mb-2">{result.phaseName}</h2>
                                 <p className="font-semibold text-foreground/80">{format(date, 'PPP')}</p>
                             </div>
