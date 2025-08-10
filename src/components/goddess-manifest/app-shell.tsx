@@ -112,22 +112,11 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          <header className="sticky top-0 z-10">
-            {/* Full-bleed, offset to clear the sidebar on desktop */}
-            <div
-              className="
-      relative left-[calc(50%-50vw)] right-[calc(50%-50vw)] w-screen
-      bg-background/80 backdrop-blur-sm border-b
-      md:pl-[var(--sidebar-width)]
-    "
-            >
-              <div className="h-16 flex items-center gap-4 px-6">
-                <SidebarTrigger className="md:hidden" />
-                <h1 className="text-xl font-headline font-semibold text-foreground/90">
-                  {title}
-                </h1>
-              </div>
-            </div>
+          <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-6 backdrop-blur-sm">
+            <SidebarTrigger className="md:hidden" />
+            <h1 className="text-xl font-headline font-semibold text-foreground/90">
+              {title}
+            </h1>
           </header>
           <main className="p-4 sm:p-6 lg:p-8 flex-1 min-w-0 w-full max-w-none">
             {children}
