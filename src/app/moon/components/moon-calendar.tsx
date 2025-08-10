@@ -50,36 +50,40 @@ export function MoonCalendar() {
   return (
     <div className="w-full flex flex-col gap-8">
         <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-            <CardHeader className="items-center text-center">
-                <div className="flex flex-col items-center justify-center gap-4">
-                     <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={(d) => d && setDate(d)}
-                        className="rounded-md"
-                        disabled={isPending || !date}
-                        initialFocus
-                    />
-                    <div className="flex items-center space-x-2 pt-4">
-                        <Label htmlFor="hemisphere-switch">Southern</Label>
-                        <Switch
-                            id="hemisphere-switch"
-                            checked={isNorthernHemisphere}
-                            onCheckedChange={setIsNorthernHemisphere}
-                            disabled={isPending}
+            <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center justify-center">
+                    <div className="lg:col-span-1 flex justify-center">
+                         <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={(d) => d && setDate(d)}
+                            className="rounded-md border"
+                            disabled={isPending || !date}
+                            initialFocus
                         />
-                        <Label htmlFor="hemisphere-switch">Northern</Label>
                     </div>
-                     <Button onClick={handleGetReading} disabled={isPending || !date} className="mt-4 h-12 text-base">
-                        {isPending ? (
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        ) : (
-                            <Wand2 className="mr-2 h-5 w-5" />
-                        )}
-                        {isPending ? 'Consulting...' : 'Get Reading'}
-                    </Button>
+                    <div className="lg:col-span-2 flex flex-col items-center justify-center gap-6">
+                        <div className="flex items-center space-x-2">
+                            <Label htmlFor="hemisphere-switch">Southern</Label>
+                            <Switch
+                                id="hemisphere-switch"
+                                checked={isNorthernHemisphere}
+                                onCheckedChange={setIsNorthernHemisphere}
+                                disabled={isPending}
+                            />
+                            <Label htmlFor="hemisphere-switch">Northern</Label>
+                        </div>
+                        <Button onClick={handleGetReading} disabled={isPending || !date} className="h-12 text-base w-full max-w-xs">
+                            {isPending ? (
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            ) : (
+                                <Wand2 className="mr-2 h-5 w-5" />
+                            )}
+                            {isPending ? 'Consulting...' : 'Get Reading'}
+                        </Button>
+                    </div>
                 </div>
-            </CardHeader>
+            </CardContent>
         </Card>
 
         {isPending && (
