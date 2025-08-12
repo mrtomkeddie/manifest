@@ -12,3 +12,4 @@ import '@/ai/flows/get-daily-reading.ts';
 import '@/ai/flows/celtic-cross-reading.ts';
 import '@/ai/flows/three-card-reading.ts';
 import '@/ai/flows/get-daily-horoscope.ts';
+import '@/ai/flows/get-dashboard-data.ts';
