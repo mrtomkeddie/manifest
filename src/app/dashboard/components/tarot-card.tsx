@@ -49,7 +49,7 @@ export function TarotCard({ card }: TarotCardProps) {
             </CardContent>
             <CardFooter>
                 <Button variant="link" asChild>
-                    <Link href="/tarot-cards">Draw another card</Link>
+                    <Link href="/tarot-cards/three-card">Explore Readings</Link>
                 </Button>
             </CardFooter>
         </Card>

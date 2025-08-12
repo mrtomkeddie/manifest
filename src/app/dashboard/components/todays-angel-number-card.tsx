@@ -33,7 +33,7 @@ export function TodaysAngelNumberCard({ number, meaning }: TodaysAngelNumberCard
             </CardContent>
              <CardFooter>
                 <Button variant="link" asChild>
-                    <Link href="/angel-numbers">Look up another number</Link>
+                    <Link href="/angel-numbers">Look up a number</Link>
                 </Button>
             </CardFooter>
         </Card>
