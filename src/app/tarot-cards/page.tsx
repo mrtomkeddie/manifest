@@ -56,19 +56,17 @@ export default function TarotCardsPage() {
             </Card>
         </div>
         
-        <Card className="max-w-5xl mx-auto bg-card/40 border-primary/10">
-            <CardHeader>
-                <CardTitle>When to Use the Celtic Cross</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-foreground/70">
+        <div className="max-w-5xl mx-auto bg-card/40 border-primary/10 p-6 rounded-lg">
+            <h3 className="text-lg font-headline mb-2">When to Use the Celtic Cross</h3>
+            <div className="space-y-4 text-foreground/70">
                 <p>
                     The Celtic Cross is a deep, 10-card spread that explores your past, present, future, inner emotions, outside influences, and potential outcomes. It’s best for big questions and moments of change — like starting a new chapter, making a major decision, or seeking clarity on a long-term situation.
                 </p>
                 <p>
                     For the clearest insights, we recommend using the Celtic Cross no more than once a month for the same question or situation. For day-to-day guidance, try our 3-Card Spread instead — it's perfect for quick check-ins and daily inspiration.
                 </p>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
 
       </div>
     </AppShell>
