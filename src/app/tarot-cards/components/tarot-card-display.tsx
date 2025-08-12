@@ -1,23 +1,27 @@
 'use client';
 import { useState, useTransition } from 'react';
-import { celticCrossReading, type CelticCrossReadingOutput } from '@/ai/flows/celtic-cross-reading';
+import { celticCrossReading, type CelticCrossReadingOutput, type CelticCrossReadingInput } from '@/ai/flows/celtic-cross-reading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Wand2, Loader2, Sparkles, BookOpen } from 'lucide-react';
 import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const topics = ['General', 'Love', 'Career', 'Finances', 'Spiritual Growth', 'Personal Development'];
 
 export function TarotCardDisplay() {
   const [result, setResult] = useState<CelticCrossReadingOutput | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [topic, setTopic] = useState(topics[0]);
   const { toast } = useToast();
 
   const handleDrawCard = () => {
     startTransition(async () => {
       setResult(null);
       try {
-        const cardResult = await celticCrossReading();
+        const cardResult = await celticCrossReading({ topic });
         setResult(cardResult);
       } catch (e) {
         console.error(e);
@@ -32,14 +36,30 @@ export function TarotCardDisplay() {
 
   if (!result && !isPending) {
     return (
-      <div className="w-full flex flex-col items-center justify-center text-center min-h-[400px]">
-        <Sparkles className="w-16 h-16 text-primary/50 mb-4" />
-        <h2 className="text-2xl font-headline text-foreground/90 mb-2">Ready to uncover the path ahead?</h2>
-        <p className="text-foreground/70 mb-6">Click the button below for a full 10-card Celtic Cross reading.</p>
-        <Button onClick={handleDrawCard} size="lg" className="h-14 text-lg px-8">
-            <Wand2 className="mr-3 h-6 w-6" />
-            Begin Reading
-        </Button>
+      <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center text-center min-h-[400px] space-y-6">
+        <Sparkles className="w-16 h-16 text-primary/50" />
+        <h2 className="text-2xl font-headline text-foreground/90">Ready to uncover the path ahead?</h2>
+        <p className="text-foreground/70">Select an area of your life you'd like to focus on for a full 10-card Celtic Cross reading.</p>
+        
+        <div className="w-full space-y-4">
+            <Select value={topic} onValueChange={setTopic}>
+                <SelectTrigger className="w-full h-12 text-base">
+                    <SelectValue placeholder="Select a topic" />
+                </SelectTrigger>
+                <SelectContent>
+                    {topics.map((t) => (
+                        <SelectItem key={t} value={t}>
+                        {t}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+
+            <Button onClick={handleDrawCard} size="lg" className="h-14 text-lg px-8 w-full">
+                <Wand2 className="mr-3 h-6 w-6" />
+                Begin Reading
+            </Button>
+        </div>
       </div>
     );
   }
@@ -63,7 +83,7 @@ export function TarotCardDisplay() {
                         <BookOpen />
                         Your Reading's Summary
                     </CardTitle>
-                    <CardDescription>An overview of the spiritual guidance from your reading.</CardDescription>
+                    <CardDescription>An overview of the spiritual guidance for your chosen topic: <span className="font-semibold text-primary/90">{topic}</span></CardDescription>
                 </CardHeader>
                 <CardContent>
                     <p className="text-lg text-foreground/90 text-center leading-relaxed">{result.summary}</p>
@@ -106,7 +126,7 @@ export function TarotCardDisplay() {
                 ))}
             </Accordion>
              <div className="text-center pt-8">
-                <Button onClick={handleDrawCard} variant="outline" size="lg">
+                <Button onClick={() => setResult(null)} variant="outline" size="lg">
                     Perform a New Reading
                 </Button>
             </div>
