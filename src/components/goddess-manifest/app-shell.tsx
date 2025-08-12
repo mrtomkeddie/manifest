@@ -32,18 +32,17 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const mainNav = [
-  { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
+  { href: '/daily-reading', icon: <Feather />, label: 'Daily Reading' },
   { href: '/tarot-cards', icon: <Sparkles />, label: 'Tarot Cards' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
   { href: '/moon', icon: <Moon />, label: 'Moon & Stars' },
-  { href: '/journal', icon: <BookMarked />, label: 'Journal' },
 ];
 
-const premiumNav = [
-  { href: '/pricing', icon: <Gem />, label: 'Go Premium' },
-  { href: '/members/downloads', icon: <Download />, label: 'Downloads', premium: true },
-  { href: '/members/events', icon: <Calendar />, label: 'Events', premium: true },
+const memberNav = [
+  { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
+  { href: '/journal', icon: <BookMarked />, label: 'Journal' },
+  { href: '/members', icon: <Gem />, label: 'Membership' },
 ];
 
 const footerNav = [
@@ -52,6 +51,7 @@ const footerNav = [
 ]
 
 function isSubpath(path: string, subpath: string) {
+  if (subpath === '/') return path === '/';
   return path.startsWith(subpath) && (path.length === subpath.length || path[subpath.length] === '/');
 }
 
@@ -60,10 +60,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
   const pathname = usePathname();
   
   const isActive = (href: string) => {
-    if (href === '/tarot-cards') {
-        return isSubpath(pathname, href);
-    }
-    return pathname === href;
+    return isSubpath(pathname, href);
   }
 
   return (
@@ -93,6 +90,10 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                         <Home className="h-5 w-5" />
                         Home
                     </Link>
+                    
+                    <hr className="my-2 border-primary/20" />
+                    <h3 className="px-3 text-xs font-semibold uppercase text-muted-foreground tracking-wider">Features</h3>
+
                     {mainNav.map((item) => (
                         <Link
                             key={item.href}
@@ -106,8 +107,11 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                             {item.label}
                         </Link>
                     ))}
-                     <hr className="my-4" />
-                    {premiumNav.map((item) => (
+
+                     <hr className="my-2 border-primary/20" />
+                     <h3 className="px-3 text-xs font-semibold uppercase text-muted-foreground tracking-wider">Members</h3>
+
+                    {memberNav.map((item) => (
                          <Link
                             key={item.href}
                             href={item.href}
