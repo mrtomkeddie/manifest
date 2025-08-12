@@ -7,3 +7,4 @@ import '@/ai/flows/get-angel-number-meaning.ts';
 import '@/ai/flows/get-moon-phase.ts';
 import '@/ai/flows/get-daily-angel-number.ts';
 import '@/ai/flows/get-daily-reading.ts';
+import '@/ai/flows/celtic-cross-reading.ts';

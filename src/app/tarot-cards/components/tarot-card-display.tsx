@@ -1,27 +1,29 @@
 'use client';
 import { useState, useTransition } from 'react';
-import { drawTarotCard, type DrawTarotCardOutput } from '@/ai/flows/draw-tarot-card';
+import { celticCrossReading, type CelticCrossReadingOutput } from '@/ai/flows/celtic-cross-reading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Wand2, Loader2, Sparkles } from 'lucide-react';
+import { Wand2, Loader2, Sparkles, BookOpen } from 'lucide-react';
 import Image from 'next/image';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export function TarotCardDisplay() {
-  const [result, setResult] = useState<DrawTarotCardOutput | null>(null);
+  const [result, setResult] = useState<CelticCrossReadingOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   const handleDrawCard = () => {
     startTransition(async () => {
+      setResult(null);
       try {
-        const cardResult = await drawTarotCard();
+        const cardResult = await celticCrossReading();
         setResult(cardResult);
       } catch (e) {
         console.error(e);
         toast({
           title: 'Error',
-          description: 'Could not draw a card. The spirits may be busy. Please try again later.',
+          description: 'Could not perform the reading. The spirits may be busy. Please try again later.',
           variant: 'destructive',
         });
       }
@@ -32,11 +34,11 @@ export function TarotCardDisplay() {
     return (
       <div className="w-full flex flex-col items-center justify-center text-center min-h-[400px]">
         <Sparkles className="w-16 h-16 text-primary/50 mb-4" />
-        <h2 className="text-2xl font-headline text-foreground/90 mb-2">Ready to receive your message?</h2>
-        <p className="text-foreground/70 mb-6">Click the button below to draw your daily tarot card.</p>
+        <h2 className="text-2xl font-headline text-foreground/90 mb-2">Ready to uncover the path ahead?</h2>
+        <p className="text-foreground/70 mb-6">Click the button below for a full 10-card Celtic Cross reading.</p>
         <Button onClick={handleDrawCard} size="lg" className="h-14 text-lg px-8">
             <Wand2 className="mr-3 h-6 w-6" />
-            Draw a Card
+            Begin Reading
         </Button>
       </div>
     );
@@ -46,56 +48,68 @@ export function TarotCardDisplay() {
     return (
         <div className="flex flex-col items-center justify-center text-center min-h-[400px]">
             <Loader2 className="w-16 h-16 text-primary/80 animate-spin mb-4" />
-            <h2 className="text-2xl font-headline text-foreground/90 mb-2">Shuffling the Deck...</h2>
-            <p className="text-foreground/70">The universe is selecting your card.</p>
+            <h2 className="text-2xl font-headline text-foreground/90 mb-2">Shuffling the Cosmic Deck...</h2>
+            <p className="text-foreground/70">The universe is laying out your cards and interpreting their sacred story.</p>
         </div>
     )
   }
 
   if (result) {
     return (
-        <div className="w-full">
+        <div className="w-full max-w-4xl mx-auto space-y-8">
             <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-                <div className="md:flex md:flex-row">
-                    <div className="md:w-1/3 p-6 flex flex-col items-center justify-center">
-                        <Image
-                            src={`https://placehold.co/400x600.png`}
-                            data-ai-hint={result.imageKeywords}
-                            alt={result.cardName}
-                            width={400}
-                            height={600}
-                            className="rounded-lg shadow-2xl shadow-primary/20 aspect-[2/3] object-cover"
-                        />
-                    </div>
-                    <div className="md:w-2/3 flex flex-col">
-                        <CardHeader>
-                            <CardTitle className="text-4xl font-headline text-primary">
-                                {result.cardName}
-                            </CardTitle>
-                            <CardDescription className="text-lg font-semibold text-foreground/80">
-                                ({result.orientation})
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6 text-base text-foreground/90">
-                            <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
-                                <p>{result.meaning}</p>
-                            </div>
-                             <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Affirmation</h3>
-                                <p className="font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-                                    &quot;{result.affirmation}&quot;
-                                </p>
-                            </div>
-                        </CardContent>
-                        <CardFooter className="mt-auto">
-                            <Button onClick={handleDrawCard} variant="outline">
-                                Draw Another Card
-                            </Button>
-                        </CardFooter>
-                    </div>
-                </div>
+                <CardHeader className="text-center">
+                    <CardTitle className="flex items-center justify-center gap-2 text-3xl font-headline text-primary">
+                        <BookOpen />
+                        Your Reading's Summary
+                    </CardTitle>
+                    <CardDescription>An overview of the spiritual guidance from your reading.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-lg text-foreground/90 text-center leading-relaxed">{result.summary}</p>
+                </CardContent>
             </Card>
+
+            <Accordion type="single" collapsible className="w-full">
+                {result.cards.map((card, index) => (
+                    <AccordionItem value={`item-${index}`} key={index}>
+                        <AccordionTrigger className="text-xl font-headline hover:no-underline">
+                           <div className="flex items-center gap-4">
+                                <span className="text-primary font-bold text-2xl w-8 text-center">{card.positionNumber}</span>
+                                <span>{card.positionName} - <span className="text-primary/90">{card.cardName}</span></span>
+                           </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                           <div className="md:flex md:flex-row gap-6 p-4">
+                                <div className="md:w-1/4 flex items-center justify-center mb-4 md:mb-0">
+                                    <Image
+                                        src={`https://placehold.co/400x600.png`}
+                                        data-ai-hint={card.imageKeywords}
+                                        alt={card.cardName}
+                                        width={200}
+                                        height={300}
+                                        className="rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover"
+                                    />
+                                </div>
+                                <div className="md:w-3/4 space-y-4">
+                                    <h3 className="text-2xl font-headline text-foreground/90">
+                                        {card.cardName} <span className="text-base font-sans text-foreground/70">({card.orientation})</span>
+                                    </h3>
+                                    <div>
+                                        <h4 className="font-bold tracking-wider uppercase text-foreground/70 text-xs mb-1">Meaning in this Position</h4>
+                                        <p className="text-foreground/80 text-base">{card.meaning}</p>
+                                    </div>
+                                </div>
+                           </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+             <div className="text-center pt-8">
+                <Button onClick={handleDrawCard} variant="outline" size="lg">
+                    Perform a New Reading
+                </Button>
+            </div>
         </div>
     )
   }
