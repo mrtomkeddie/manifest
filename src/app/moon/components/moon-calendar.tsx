@@ -42,11 +42,6 @@ export function MoonCalendar() {
     });
   };
 
-  useEffect(() => {
-    handleGetReading();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-1 flex flex-col gap-8">
@@ -156,6 +151,7 @@ export function MoonCalendar() {
                                     Stars Reading
                                 </CardTitle>
                                 <CardDescription>{result.starsReading.signAndAspects}</CardDescription>
+
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
