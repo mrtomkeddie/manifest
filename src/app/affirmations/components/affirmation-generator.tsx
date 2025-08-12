@@ -1,12 +1,12 @@
+
 'use client';
 import { useState, useTransition } from 'react';
 import { generateAffirmation, type GenerateAffirmationOutput } from '@/ai/flows/generate-affirmation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Wand2, Loader2, Info } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 
 const categories = ['Random', 'Love', 'Confidence', 'Abundance', 'Calm', 'Health', 'Success'];
 const affirmationCategories = categories.slice(1);
@@ -73,22 +73,25 @@ export function AffirmationGenerator() {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="min-h-[150px] flex flex-col items-center justify-center p-6 gap-6">
+      <CardContent className="min-h-[200px] flex flex-col items-center justify-center p-6 gap-8">
         {result ? (
-          <div className="text-center w-full animate-in fade-in duration-500">
-            <p className="text-2xl md:text-3xl font-headline text-center font-semibold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-              "{result.affirmation}"
-            </p>
+          <div className="text-center w-full animate-in fade-in duration-500 space-y-8">
+            <div className="space-y-4">
+                <p className="text-2xl md:text-3xl font-headline text-center font-semibold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
+                "{result.affirmation}"
+                </p>
+                <Button variant="ghost" onClick={handleCopy}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Affirmation
+                </Button>
+            </div>
 
             {result.usageTip && (
-                <div className="mt-8">
-                    <Separator className="my-4 bg-primary/20" />
-                    <div className="text-sm text-foreground/80 bg-background/40 p-4 rounded-lg flex items-start gap-3">
-                        <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <div>
-                            <h3 className="font-bold mb-1">How to Use This Affirmation</h3>
-                            <p>{result.usageTip}</p>
-                        </div>
+                <div className="text-sm text-left text-foreground/80 bg-background/40 p-4 rounded-lg flex items-start gap-3 max-w-2xl mx-auto">
+                    <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                        <h3 className="font-bold mb-1 text-foreground/90">How to Use This Affirmation</h3>
+                        <p>{result.usageTip}</p>
                     </div>
                 </div>
             )}
@@ -97,14 +100,6 @@ export function AffirmationGenerator() {
             <p className="text-foreground/60">Your personal affirmation will appear here...</p>
         )}
       </CardContent>
-      {result && !isPending && (
-        <CardFooter className="justify-end">
-            <Button variant="ghost" onClick={handleCopy}>
-                <Copy className="mr-2 h-4 w-4" />
-                Copy
-            </Button>
-        </CardFooter>
-      )}
     </Card>
   );
 }
