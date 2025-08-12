@@ -8,9 +8,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Search, Loader2, Sparkles, Wand2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const topics = ['General', 'Love', 'Career', 'Finances', 'Spiritual Growth', 'Personal Development'];
 
 export function AngelNumberLookup() {
   const [number, setNumber] = useState('');
+  const [topic, setTopic] = useState(topics[0]);
   const [displayedNumber, setDisplayedNumber] = useState('');
   const [result, setResult] = useState<AngelNumberOutput | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -28,7 +32,7 @@ export function AngelNumberLookup() {
     startTransition(async () => {
       setResult(null);
       try {
-        const meaningResult = await getAngelNumberMeaning({ number: numberToLookup });
+        const meaningResult = await getAngelNumberMeaning({ number: numberToLookup, topic });
         setResult(meaningResult);
         setDisplayedNumber(numberToLookup);
       } catch (e) {
@@ -48,6 +52,7 @@ export function AngelNumberLookup() {
         setNumber(''); // Clear input field
         try {
             const { number: dailyNumber } = await getDailyAngelNumber();
+            setNumber(dailyNumber);
             handleLookup(dailyNumber);
         } catch (e) {
             console.error(e);
@@ -77,9 +82,21 @@ export function AngelNumberLookup() {
                     onChange={(e) => setNumber(e.target.value.replace(/[^0-9]/g, ''))}
                     onKeyDown={handleKeyDown}
                     placeholder="e.g., 444, 1111, 222..."
-                    className="h-12 text-base"
+                    className="h-12 text-base md:flex-1"
                     disabled={isPending}
                 />
+                 <Select value={topic} onValueChange={setTopic} disabled={isPending}>
+                    <SelectTrigger className="w-full md:w-[200px] h-12 text-base">
+                    <SelectValue placeholder="Select a topic" />
+                    </SelectTrigger>
+                    <SelectContent>
+                    {topics.map((t) => (
+                        <SelectItem key={t} value={t}>
+                        {t}
+                        </SelectItem>
+                    ))}
+                    </SelectContent>
+                </Select>
                 <Button onClick={() => handleLookup(number)} disabled={isPending} className="h-12 text-base w-full md:w-auto">
                     {isPending ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -106,7 +123,7 @@ export function AngelNumberLookup() {
                 <div className="w-full p-6 text-base text-center text-foreground/90 animate-in fade-in duration-500">
                     <h2 className="text-6xl font-headline text-primary tracking-widest mb-8">{displayedNumber}</h2>
                     <div className="mb-8">
-                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
+                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning for {topic}</h3>
                         <p>{result.meaning}</p>
                     </div>
                         <div>
