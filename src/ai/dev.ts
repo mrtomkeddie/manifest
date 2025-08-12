@@ -1,3 +1,4 @@
+
 import { config } from 'dotenv';
 config();
 
@@ -8,3 +9,4 @@ import '@/ai/flows/get-moon-phase.ts';
 import '@/ai/flows/get-daily-angel-number.ts';
 import '@/ai/flows/get-daily-reading.ts';
 import '@/ai/flows/celtic-cross-reading.ts';
+import '@/ai/flows/three-card-reading.ts';

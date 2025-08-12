@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -50,8 +51,20 @@ const footerNav = [
     { href: '/logout', icon: <LogOut />, label: 'Logout' },
 ]
 
+function isSubpath(path: string, subpath: string) {
+  return path.startsWith(subpath) && (path.length === subpath.length || path[subpath.length] === '/');
+}
+
+
 export function AppShell({ children, title }: { children: ReactNode; title: string }) {
   const pathname = usePathname();
+  
+  const isActive = (href: string) => {
+    if (href === '/tarot-cards') {
+        return isSubpath(pathname, href);
+    }
+    return pathname === href;
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -86,7 +99,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                             href={item.href}
                             className={cn(
                                 "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
-                                pathname === item.href && "text-primary"
+                                isActive(item.href) && "text-primary"
                             )}
                         >
                             {item.icon}
@@ -100,7 +113,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                             href={item.href}
                             className={cn(
                                 "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
-                                pathname === item.href && "text-primary"
+                                isActive(item.href) && "text-primary"
                             )}
                         >
                             {item.icon}
@@ -117,7 +130,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
                                 href={item.href}
                                 className={cn(
                                     "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
-                                    pathname === item.href && "text-primary"
+                                    isActive(item.href) && "text-primary"
                                 )}
                             >
                                 {item.icon}

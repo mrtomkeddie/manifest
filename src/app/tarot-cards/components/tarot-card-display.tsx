@@ -1,6 +1,7 @@
+
 'use client';
 import { useState, useTransition } from 'react';
-import { celticCrossReading, type CelticCrossReadingOutput, type CelticCrossReadingInput } from '@/ai/flows/celtic-cross-reading';
+import { celticCrossReading, type CelticCrossReadingOutput } from '@/ai/flows/celtic-cross-reading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
