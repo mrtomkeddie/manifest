@@ -20,6 +20,7 @@ export type GenerateAffirmationInput = z.infer<typeof GenerateAffirmationInputSc
 
 const GenerateAffirmationOutputSchema = z.object({
   affirmation: z.string().describe('The generated affirmation.'),
+  usageTip: z.string().describe("A 1-2 sentence actionable tip on how to best use the affirmation (e.g., 'Repeat this in the mirror,' 'Write this down 5 times')."),
 });
 export type GenerateAffirmationOutput = z.infer<typeof GenerateAffirmationOutputSchema>;
 
@@ -31,7 +32,7 @@ const prompt = ai.definePrompt({
   name: 'generateAffirmationPrompt',
   input: {schema: GenerateAffirmationInputSchema},
   output: {schema: GenerateAffirmationOutputSchema},
-  prompt: `You are an affirmation generator.  Please create an affirmation based on the category provided.
+  prompt: `You are an affirmation generator and spiritual coach. Please create an affirmation based on the category provided. Also, provide a short, actionable tip for how the user can best integrate this affirmation into their day.
 
 Category: {{{category}}}`,
 });

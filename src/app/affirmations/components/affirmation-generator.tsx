@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Wand2, Loader2 } from 'lucide-react';
+import { Copy, Wand2, Loader2, Info } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 const categories = ['Random', 'Love', 'Confidence', 'Abundance', 'Calm', 'Health', 'Success'];
 const affirmationCategories = categories.slice(1);
@@ -72,11 +73,26 @@ export function AffirmationGenerator() {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="min-h-[150px] flex items-center justify-center p-6">
+      <CardContent className="min-h-[150px] flex flex-col items-center justify-center p-6 gap-6">
         {result ? (
-          <p className="text-2xl md:text-3xl font-headline text-center font-semibold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-            "{result.affirmation}"
-          </p>
+          <div className="text-center w-full animate-in fade-in duration-500">
+            <p className="text-2xl md:text-3xl font-headline text-center font-semibold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
+              "{result.affirmation}"
+            </p>
+
+            {result.usageTip && (
+                <div className="mt-8">
+                    <Separator className="my-4 bg-primary/20" />
+                    <div className="text-sm text-foreground/80 bg-background/40 p-4 rounded-lg flex items-start gap-3">
+                        <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <div>
+                            <h3 className="font-bold mb-1">How to Use This Affirmation</h3>
+                            <p>{result.usageTip}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+          </div>
         ) : (
             <p className="text-foreground/60">Your personal affirmation will appear here...</p>
         )}
