@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Calendar } from "@/components/ui/calendar"
-import { Separator } from '@/components/ui/separator';
+import { HoroscopeDisplay } from './horoscope-display';
 
 function formatDate(date: Date) {
     return format(date, 'yyyy-MM-dd');
@@ -48,8 +48,8 @@ export function MoonCalendar() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 flex flex-col gap-8">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="xl:col-span-1 flex flex-col gap-8">
             <Card className="bg-card/50 border-primary/20 shadow-xl shadow-primary/5 flex flex-col">
                 <CardHeader>
                     <CardTitle>Select Date</CardTitle>
@@ -92,7 +92,7 @@ export function MoonCalendar() {
             </Button>
         </div>
 
-        <div className="lg:col-span-2 space-y-8">
+        <div className="xl:col-span-2 space-y-8">
             {isPending && (
                 <div className="flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
                     <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
@@ -179,6 +179,10 @@ export function MoonCalendar() {
                     <h2 className="text-2xl font-headline">Select a date</h2>
                     <p>Choose a date and your hemisphere to reveal the cosmic guidance.</p>
                 </div>
+            )}
+
+            {!isPending && (
+                <HoroscopeDisplay />
             )}
         </div>
     </div>

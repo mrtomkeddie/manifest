@@ -1,3 +1,4 @@
+'use server';
 
 import { config } from 'dotenv';
 config();
@@ -10,3 +11,4 @@ import '@/ai/flows/get-daily-angel-number.ts';
 import '@/ai/flows/get-daily-reading.ts';
 import '@/ai/flows/celtic-cross-reading.ts';
 import '@/ai/flows/three-card-reading.ts';
+import '@/ai/flows/get-daily-horoscope.ts';
