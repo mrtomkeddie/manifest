@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const ThreeCardReadingInputSchema = z.object({
+const ThreeCardReadingInputSchema = z.object({
   topic: z
     .string()
     .describe("The user's area of focus for the reading (e.g., 'Love', 'Career', 'General')."),
