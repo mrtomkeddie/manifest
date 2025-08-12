@@ -37,7 +37,7 @@ export async function Dashboard() {
     affirmationPromise
   ]);
   
-  const angelNumberMeaning = await getAngelNumberMeaning({ number: dailyAngelNumber.number });
+  const angelNumberMeaning = await getAngelNumberMeaning({ number: dailyAngelNumber.number, topic: 'General' });
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
