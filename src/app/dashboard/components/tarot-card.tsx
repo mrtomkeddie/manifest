@@ -1,6 +1,8 @@
+
 import type { DrawTarotCardOutput } from "@/ai/flows/draw-tarot-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +28,10 @@ export function TarotCard({ card }: TarotCardProps) {
                             alt={card.cardName}
                             width={400}
                             height={600}
-                            className="rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover w-full"
+                            className={cn(
+                                "rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover w-full transition-transform duration-500",
+                                card.orientation === 'reversed' && "rotate-180"
+                            )}
                         />
                     </div>
                     <div className="sm:w-2/3 space-y-4">

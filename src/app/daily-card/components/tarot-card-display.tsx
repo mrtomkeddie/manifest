@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useTransition } from 'react';
 import { drawTarotCard, type DrawTarotCardOutput } from '@/ai/flows/draw-tarot-card';
@@ -6,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from '@/hooks/use-toast';
 import { Wand2, Loader2, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 export function TarotCardDisplay() {
   const [result, setResult] = useState<DrawTarotCardOutput | null>(null);
@@ -63,7 +65,10 @@ export function TarotCardDisplay() {
                             alt={result.cardName}
                             width={400}
                             height={600}
-                            className="rounded-lg shadow-2xl shadow-primary/20 aspect-[2/3] object-cover"
+                            className={cn(
+                                "rounded-lg shadow-2xl shadow-primary/20 aspect-[2/3] object-cover transition-transform duration-500",
+                                result.orientation === 'reversed' && "rotate-180"
+                            )}
                         />
                     </div>
                     <div className="md:w-2/3 flex flex-col">

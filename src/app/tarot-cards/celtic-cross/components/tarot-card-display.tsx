@@ -9,6 +9,7 @@ import { Wand2, Loader2, Sparkles, BookOpen } from 'lucide-react';
 import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 const topics = ['General', 'Love', 'Career', 'Finances', 'Spiritual Growth', 'Personal Development'];
 
@@ -108,7 +109,10 @@ export function TarotCardDisplay() {
                                         alt={card.cardName}
                                         width={200}
                                         height={300}
-                                        className="rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover"
+                                        className={cn(
+                                            "rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover transition-transform duration-500",
+                                            card.orientation === 'reversed' && "rotate-180"
+                                        )}
                                     />
                                 </div>
                                 <div className="md:w-3/4 space-y-4">

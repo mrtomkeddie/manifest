@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useTransition } from 'react';
 import { threeCardReading, type ThreeCardReadingOutput } from '@/ai/flows/three-card-reading';
@@ -7,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Wand2, Loader2, Sparkles, BookOpen } from 'lucide-react';
 import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 const topics = ['General', 'Love', 'Career', 'Finances', 'Spiritual Growth', 'Personal Development'];
 
@@ -101,7 +103,10 @@ export function ThreeCardDisplay() {
                                 alt={card.cardName}
                                 width={200}
                                 height={300}
-                                className="rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover"
+                                className={cn(
+                                    "rounded-lg shadow-lg shadow-primary/10 aspect-[2/3] object-cover transition-transform duration-500",
+                                    card.orientation === 'reversed' && "rotate-180"
+                                )}
                             />
                             <div className="text-center">
                                 <h3 className="text-xl font-headline text-foreground/90">
