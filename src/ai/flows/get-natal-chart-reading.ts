@@ -48,7 +48,7 @@ const prompt = ai.definePrompt({
   1.  **headline**: A catchy, empowering title for this Sun/Moon combination (e.g., "The Driven Nurturer," "The Charismatic Innovator").
   2.  **sunSignInterpretation**: A 2-3 sentence mystical interpretation of their Sun sign's influence on their core identity.
   3.  **moonSignInterpretation**: A 2-3 sentence mystical interpretation of their Moon sign's influence on their emotional world.
-  4.  **combinedInterpretation**: A 3-4 sentence synthesis of how these two powerful energies interact. Explain their core inner dynamic and offer guidance on how to harness this unique combination for personal growth and manifestation.
+  4.  **combinedInterpretation**: A 3-4 sentence synthesis of how these two powerful energies interact. Explain their core inner dynamic and offer guidance on how to harness this unique combination for **personal growth and manifestation**.
 
   Your tone should be wise, magical, and deeply empowering. Do not add any conversational text.`,
 });
