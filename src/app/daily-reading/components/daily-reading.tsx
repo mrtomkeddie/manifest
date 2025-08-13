@@ -1,4 +1,5 @@
 
+
 import { format } from 'date-fns';
 import { DailyReadingCard } from './daily-reading-card';
 import { TodaysMoonPhaseCard } from './todays-moon-phase-card';
@@ -8,7 +9,7 @@ import { TodaysAngelNumberCard } from './todays-angel-number-card';
 import { getDashboardData } from '@/ai/flows/get-dashboard-data';
 import { TodaysHoroscopeCard } from './todays-horoscope-card';
 
-export async function Dashboard() {
+export async function DailyReading() {
   const dashboardData = await getDashboardData({ date: format(new Date(), 'yyyy-MM-dd'), isNorthernHemisphere: true });
 
   return (

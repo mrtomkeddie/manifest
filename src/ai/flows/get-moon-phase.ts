@@ -2,7 +2,7 @@
 'use server';
 
 /**
- * @fileOverview An AI agent for providing moon phase information.
+ * @fileOverview An AI agent for providing moon phase information for manifestation.
  *
  * - getMoonPhase - A function that returns details for a given date.
  * - GetMoonPhaseInput - The input type for the getMoonPhase function.
@@ -32,11 +32,11 @@ const GetMoonPhaseOutputSchema = z.object({
   imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
   phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
   zodiacSign: z.string().describe('The zodiac sign the moon is currently in (e.g., "Aries", "Taurus").'),
-  description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
-  ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere and zodiac sign."),
-  affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
-  starsReading: z.string().describe("A 2-3 sentence reading about the influence of the current zodiac sign on the moon's energy."),
-  combinedInsight: z.string().describe("A 2-3 sentence summary that synthesizes the moon phase and the zodiac sign's influence into a single piece of actionable guidance."),
+  description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account, with a focus on how to leverage it for manifestation."),
+  ritual: z.string().describe("A short, simple manifestation ritual suggestion for this moon phase, tailored to the hemisphere and zodiac sign."),
+  affirmation: z.string().describe('A short, powerful affirmation for manifestation that is related to the phase\'s energy.'),
+  starsReading: z.string().describe("A 2-3 sentence reading about the influence of the current zodiac sign on the moon's energy, focusing on manifestation."),
+  combinedInsight: z.string().describe("A 2-3 sentence summary that synthesizes the moon phase and the zodiac sign's influence into a single piece of actionable guidance for manifestation."),
 });
 
 export type GetMoonPhaseOutput = z.infer<typeof GetMoonPhaseOutputSchema>;
@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
   name: 'getMoonPhasePrompt',
   input: {schema: GetMoonPhaseInternalInputSchema},
   output: {schema: GetMoonPhaseOutputSchema},
-  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles. A user has provided a date and their hemisphere to get a reading.
+  prompt: `You are a spiritual guide and astrologer specializing in lunar cycles and manifestation. A user has provided a date and their hemisphere to get a reading focused on manifestation.
 
   The date is {{{date}}}.
   The calculated moon phase is "{{{phaseName}}}".
@@ -60,14 +60,14 @@ const prompt = ai.definePrompt({
   - In the **Northern Hemisphere**, the moon "waxes" (grows) from right to left. The energy is about building, growth, and manifestation.
   - In the **Southern Hemisphere**, the moon "waxes" (grows) from left to right. This hemisphere's traditions often associate the waxing visual with the waning energy of release, introspection, and letting go. The spiritual interpretation must be different.
 
-  Please provide a reading structured as follows:
+  Please provide a reading structured as follows, with every part focused on **MANIFESTATION**:
     -   **phaseName**: Confirm the phase name: "{{{phaseName}}}".
     -   **zodiacSign**: Confirm the zodiac sign: "{{{zodiacSign}}}".
-    -   **description**: A 2-3 sentence spiritual interpretation of the energy of that phase, making sure it is **distinct and appropriate** for the user's hemisphere.
-    -   **starsReading**: A 2-3 sentence reading about the influence of the zodiac sign "{{{zodiacSign}}}" on the moon's energy.
-    -   **ritual**: A simple, actionable ritual suggestion that combines the energies of both the moon phase and the zodiac sign.
-    -   **affirmation**: A short, powerful affirmation that aligns with the combined energy.
-    -   **combinedInsight**: A 2-3 sentence summary synthesizing the moon phase and zodiac sign's influence into a single piece of actionable guidance.
+    -   **description**: A 2-3 sentence spiritual interpretation of the energy of that phase, focused on how it impacts manifestation.
+    -   **starsReading**: A 2-3 sentence reading about the influence of the zodiac sign "{{{zodiacSign}}}" on the moon's energy, specifically for manifestation.
+    -   **ritual**: A simple, actionable manifestation ritual suggestion that combines the energies of both the moon phase and the zodiac sign.
+    -   **affirmation**: A short, powerful manifestation-focused affirmation that aligns with the combined energy.
+    -   **combinedInsight**: A 2-3 sentence summary synthesizing the moon phase and zodiac sign's influence into a single piece of actionable guidance for manifesting desires.
   
   Finally, provide **imageKeywords** for the moon phase (e.g., "full moon", "waning crescent").
   

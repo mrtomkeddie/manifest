@@ -40,7 +40,6 @@ const mainNav = [
 ];
 
 const memberNav = [
-  { href: '/dashboard', icon: <LayoutDashboard />, label: 'Dashboard' },
   { href: '/journal', icon: <BookMarked />, label: 'Journal' },
   { href: '/members', icon: <Gem />, label: 'Membership' },
 ];
