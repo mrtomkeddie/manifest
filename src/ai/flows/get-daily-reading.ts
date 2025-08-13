@@ -16,6 +16,10 @@ const DailyReadingOutputSchema = z.object({
 });
 export type DailyReadingOutput = z.infer<typeof DailyReadingOutputSchema>;
 
+const fallbackReading: DailyReadingOutput = {
+    reading: "The cosmos is alive with energy today. Take a moment to breathe deeply, center yourself, and remember the powerful creator you are. Your intuition is your most trusted guide—listen to its whispers. You have everything you need to make today magical."
+};
+
 export async function getDailyReading(): Promise<DailyReadingOutput> {
   return getDailyReadingFlow();
 }
@@ -55,7 +59,16 @@ const getDailyReadingFlow = ai.defineFlow(
     outputSchema: DailyReadingOutputSchema,
   },
   async () => {
-    const {output} = await prompt({});
-    return output!;
+    try {
+        const {output} = await prompt({});
+        if (!output) {
+            console.error("AI output for daily reading was null or undefined, returning fallback.");
+            return fallbackReading;
+        }
+        return output;
+    } catch (error) {
+        console.error("AI call for daily reading failed, returning fallback data.", error);
+        return fallbackReading;
+    }
   }
 );
