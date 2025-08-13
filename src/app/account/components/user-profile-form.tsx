@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -42,9 +43,23 @@ export function UserProfileForm() {
     mode: 'onChange',
   });
 
+  useEffect(() => {
+    try {
+        const storedProfile = localStorage.getItem('userProfile');
+        if (storedProfile) {
+            const parsedProfile = JSON.parse(storedProfile);
+            // Zod expects a Date object, so we need to convert the string back
+            if(parsedProfile.birthDate) {
+                parsedProfile.birthDate = new Date(parsedProfile.birthDate);
+            }
+            form.reset(parsedProfile);
+        }
+    } catch (error) {
+        console.error("Failed to load user profile from local storage", error);
+    }
+  }, [form]);
+
   function onSubmit(data: ProfileFormValues) {
-    // In a real app, you'd save this to a database.
-    // For now, we'll save it to localStorage.
     localStorage.setItem('userProfile', JSON.stringify(data));
     toast({
       title: 'Profile Saved',
