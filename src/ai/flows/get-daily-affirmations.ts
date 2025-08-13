@@ -79,7 +79,7 @@ Return a single affirmation for each of these categories:
 - {{{this}}}
 {{/each}}
 
-Ensure the output is a valid array of objects in the specified format. Do not add any conversational text.`,
+Ensure the output is a valid JSON object with a single 'affirmations' key, containing an array of objects in the specified format. Do not add any conversational text.`,
 });
 
 const getDailyAffirmationsFlow = ai.defineFlow(
@@ -88,11 +88,16 @@ const getDailyAffirmationsFlow = ai.defineFlow(
     outputSchema: DailyAffirmationsOutputSchema,
   },
   async () => {
-    const {output} = await prompt({ categories: affirmationCategories });
-    if (!output || !output.affirmations || output.affirmations.length !== affirmationCategories.length) {
-        console.error("AI output for daily affirmations was null, undefined, or incomplete.");
-        throw new Error("Invalid AI output.");
+    try {
+        const {output} = await prompt({ categories: affirmationCategories });
+        if (!output || !output.affirmations || output.affirmations.length !== affirmationCategories.length) {
+            console.error("AI output for daily affirmations was null, undefined, or incomplete.");
+            throw new Error("Invalid AI output.");
+        }
+        return output;
+    } catch (error) {
+        console.error("AI call for daily affirmations failed.", error);
+        throw new Error("Failed to generate daily affirmations from AI.");
     }
-    return output;
   }
 );
