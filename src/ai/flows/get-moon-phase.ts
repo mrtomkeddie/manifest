@@ -47,7 +47,7 @@ export async function getMoonPhase(input: GetMoonPhaseInput): Promise<GetMoonPha
 
 const prompt = ai.definePrompt({
   name: 'getMoonPhasePrompt',
-  model: 'deepseek-chat',
+  model: 'openai/deepseek-chat',
   input: {schema: GetMoonPhaseInternalInputSchema},
   output: {schema: GetMoonPhaseOutputSchema},
   prompt: `You are a spiritual guide and astrologer specializing in lunar cycles and manifestation. A user has provided a date and their hemisphere to get a reading focused on manifestation.
