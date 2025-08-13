@@ -1,4 +1,3 @@
-'use server';
 
 import { genkit } from 'genkit';
 import openAI from '@genkit-ai/compat-oai';
