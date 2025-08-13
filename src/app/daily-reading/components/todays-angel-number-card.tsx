@@ -1,5 +1,5 @@
 
-import type { AngelNumberOutput } from "@/ai/flows/get-angel-number-meaning";
+import { AngelNumberReading } from "@/ai/flows/get-daily-angel-number-readings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
@@ -7,7 +7,11 @@ import Link from "next/link";
 
 interface TodaysAngelNumberCardProps {
     number: string;
-    meaning: AngelNumberOutput;
+    meaning: {
+        topic: string;
+        meaning: string;
+        affirmation: string;
+    };
 }
 
 export function TodaysAngelNumberCard({ number, meaning }: TodaysAngelNumberCardProps) {

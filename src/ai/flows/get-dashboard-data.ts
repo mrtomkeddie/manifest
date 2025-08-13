@@ -38,6 +38,10 @@ const TarotCardOutputSchema = z.object({
     image: z.string().describe('The path to the image for the card.'),
 });
 
+const AngelNumberMeaningSchema = z.object({
+  meaning: z.string().describe('The spiritual meaning of the angel number in 2-3 concise sentences for a general topic.'),
+  affirmation: z.string().describe('A short, powerful affirmation related to the number\'s meaning.'),
+});
 
 const GetDashboardDataOutputSchema = z.object({
     dailyReading: z.object({
@@ -50,10 +54,7 @@ const GetDashboardDataOutputSchema = z.object({
     }),
     angelNumber: z.object({
         number: z.string().describe('A common angel number sequence, like "333", "1111", or "1212".'),
-        meaning: z.object({
-            meaning: z.string().describe('The spiritual meaning of the angel number in 2-3 concise sentences for a general topic.'),
-            affirmation: z.string().describe('A short, powerful affirmation related to the number\'s meaning.'),
-        })
+        meaning: AngelNumberMeaningSchema,
     }),
     moonPhase: z.object({
       imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
@@ -107,7 +108,7 @@ const getDashboardDataFlow = ai.defineFlow(
     const [
       dailyReadingResult,
       affirmationResult,
-      angelNumber,
+      angelNumberResult,
       moonPhaseResult,
       tarotMeaningResult,
     ] = await Promise.all([
@@ -119,7 +120,7 @@ const getDashboardDataFlow = ai.defineFlow(
         console.error("Failed to generate affirmation:", e);
         return { affirmation: "I am open to the universe's guidance.", usageTip: "Breathe deeply and trust your path." };
       }),
-      getDailyAngelNumber().catch((e) => {
+      getDailyAngelNumber().catch((e) => { // This now uses the local function, but we'll keep the fallback.
         console.error("Failed to get daily angel number, using fallback.", e);
         return { number: "111" };
       }),
@@ -142,9 +143,13 @@ const getDashboardDataFlow = ai.defineFlow(
     ]);
     
     // Get angel number meaning, now with a guaranteed number
-    const angelNumberMeaning = await getAngelNumberMeaning({ number: angelNumber.number, topic: 'General' }).catch((e) => {
+    const { readings } = await getAngelNumberMeaning({ number: angelNumberResult.number, topics: ['General'] }).catch((e) => {
         console.error("Failed to get angel number meaning, using fallback.", e);
-        return { meaning: "A sign of new beginnings and alignment. The universe is listening.", affirmation: "I am aligned with my highest purpose." };
+        return { readings: [{
+            topic: 'General',
+            meaning: "A sign of new beginnings and alignment. The universe is listening.",
+            affirmation: "I am aligned with my highest purpose."
+        }]};
     });
 
     const tarotOutput: GetDashboardDataOutput['tarotCard'] = {
@@ -160,8 +165,8 @@ const getDashboardDataFlow = ai.defineFlow(
       dailyReading: dailyReadingResult,
       affirmation: affirmationResult,
       angelNumber: {
-        number: angelNumber.number,
-        meaning: angelNumberMeaning,
+        number: angelNumberResult.number,
+        meaning: readings[0],
       },
       moonPhase: {
         phaseName: moonPhaseResult.phaseName,

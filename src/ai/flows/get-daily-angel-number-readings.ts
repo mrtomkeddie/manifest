@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { getDailyAngelNumber } from './get-daily-angel-number';
-import { getAngelNumberMeaning, type AngelNumberOutput } from './get-angel-number-meaning';
+import { getAngelNumberMeaning } from './get-angel-number-meaning';
 
 const readingTopics = ['General', 'Love', 'Career', 'Finances', 'Spiritual Growth'];
 
@@ -59,20 +59,11 @@ const getDailyAngelNumberReadingsFlow = ai.defineFlow(
     outputSchema: DailyAngelNumberReadingsOutputSchema,
   },
   async () => {
-    // 1. Get the single daily angel number.
+    // 1. Get the daily angel number from our local, deterministic function.
     const { number } = await getDailyAngelNumber();
 
-    // 2. Create a promise for each topic to get its meaning.
-    const readingPromises = readingTopics.map(topic => 
-        getAngelNumberMeaning({ number, topic }).then(result => ({
-            topic,
-            meaning: result.meaning,
-            affirmation: result.affirmation
-        }))
-    );
-    
-    // 3. Run all promises in parallel.
-    const readings = await Promise.all(readingPromises);
+    // 2. Make a single AI call to get all readings for all topics.
+    const { readings } = await getAngelNumberMeaning({ number, topics: readingTopics });
 
     return {
         number,

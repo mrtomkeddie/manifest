@@ -1,7 +1,7 @@
 
 'use client';
 import { useState, useTransition } from 'react';
-import { getAngelNumberMeaning, type AngelNumberOutput } from '@/ai/flows/get-angel-number-meaning';
+import { getAngelNumberMeaning } from '@/ai/flows/get-angel-number-meaning';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -15,7 +15,7 @@ export function AngelNumberLookup() {
   const [number, setNumber] = useState('');
   const [topic, setTopic] = useState(topics[0]);
   const [displayedNumber, setDisplayedNumber] = useState('');
-  const [result, setResult] = useState<AngelNumberOutput | null>(null);
+  const [result, setResult] = useState<{ topic: string, meaning: string, affirmation: string } | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
@@ -31,8 +31,10 @@ export function AngelNumberLookup() {
     startTransition(async () => {
       setResult(null);
       try {
-        const meaningResult = await getAngelNumberMeaning({ number: numberToLookup, topic });
-        setResult(meaningResult);
+        const meaningResult = await getAngelNumberMeaning({ number: numberToLookup, topics: [topic] });
+        if (meaningResult.readings.length > 0) {
+            setResult(meaningResult.readings[0]);
+        }
         setDisplayedNumber(numberToLookup);
       } catch (e) {
         console.error(e);
