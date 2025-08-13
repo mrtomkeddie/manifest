@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -30,6 +31,7 @@ export async function generateAffirmation(input: GenerateAffirmationInput): Prom
 
 const prompt = ai.definePrompt({
   name: 'generateAffirmationPrompt',
+  model: 'deepseek-chat',
   input: {schema: GenerateAffirmationInputSchema},
   output: {schema: GenerateAffirmationOutputSchema},
   prompt: `You are an affirmation generator and spiritual coach. Please create an affirmation based on the category provided. Also, provide a short, actionable tip for how the user can best integrate this affirmation into their day.

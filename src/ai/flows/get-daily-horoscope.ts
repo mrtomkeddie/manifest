@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -29,6 +30,7 @@ export async function getDailyHoroscope(input: GetDailyHoroscopeInput): Promise<
 
 const prompt = ai.definePrompt({
   name: 'getDailyHoroscopePrompt',
+  model: 'deepseek-chat',
   input: {schema: GetDailyHoroscopeInputSchema},
   output: {schema: GetDailyHoroscopeOutputSchema},
   prompt: `You are a modern, empowering astrologer. Your tone is like a wise, supportive friend who understands the cosmos. A user has requested a daily horoscope for their zodiac sign. 
