@@ -51,7 +51,7 @@ const PromptOutputSchema = DrawTarotCardOutputSchema.omit({ image: true, imageKe
 
 const prompt = ai.definePrompt({
   name: 'drawTarotCardPrompt',
-  model: 'openai/deepseek-chat',
+  model: 'deepseek-chat',
   input: {schema: DrawTarotCardInputSchema},
   output: {schema: PromptOutputSchema},
   prompt: `You are a mystical tarot reader. A user has drawn their daily card. 

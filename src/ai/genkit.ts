@@ -1,7 +1,8 @@
+
 import { genkit } from 'genkit';
 import openAI from '@genkit-ai/compat-oai';
 import { ModelInfo } from 'genkit/model';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 // 1) Model capabilities (minimal but accurate for DeepSeek chat/reasoner)
 const chatInfo: ModelInfo = {

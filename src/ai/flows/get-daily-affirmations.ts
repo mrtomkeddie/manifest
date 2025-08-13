@@ -69,7 +69,7 @@ export async function getDailyAffirmations(): Promise<DailyAffirmationsOutput> {
 
 const prompt = ai.definePrompt({
   name: 'getDailyAffirmationsPrompt',
-  model: 'openai/deepseek-chat',
+  model: 'deepseek-chat',
   input: {schema: z.object({ categories: z.array(z.string()) })},
   output: {schema: DailyAffirmationsOutputSchema},
   prompt: `You are an affirmation generator and spiritual coach. For each category provided, please create a unique, powerful affirmation. Also provide a short, actionable tip for how the user can best integrate that specific affirmation into their day.
