@@ -1,20 +1,16 @@
 
 'use client';
-import { useState, useEffect, useTransition } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
-import { Sun, Moon, Loader2, Sparkles } from 'lucide-react';
-import type { ProfileFormValues } from '@/app/account/components/user-profile-form';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { getSunSign, getMoonZodiacSign } from '@/services/astrology-service';
-import { getNatalChartReading, type GetNatalChartReadingOutput } from '@/ai/flows/get-natal-chart-reading';
-import { useToast } from '@/hooks/use-toast';
+import { Sun, Moon, Sparkles } from 'lucide-react';
+import type { GetNatalChartReadingOutput } from '@/ai/flows/get-natal-chart-reading';
 
 type NatalChartData = GetNatalChartReadingOutput & {
     sunSign: string;
     moonSign: string;
 };
 
+// Define the dummy data directly in the component
 const dummyChartData: NatalChartData = {
     headline: "The Visionary Pioneer",
     sunSign: "Aries",
@@ -26,104 +22,21 @@ const dummyChartData: NatalChartData = {
 
 
 export function HoroscopeDisplay() {
-  const [chartData, setChartData] = useState<NatalChartData | null>(dummyChartData);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isProfileMissing, setIsProfileMissing] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchNatalChart = async () => {
-        setIsLoading(true);
-        setIsProfileMissing(false);
-        setChartData(null);
-        try {
-            const storedProfile = localStorage.getItem('userProfile');
-            if (!storedProfile) {
-                setIsProfileMissing(true);
-                setIsLoading(false);
-                setChartData(null); // Ensure no data is shown if profile is missing
-                return;
-            }
-            
-            const profile: ProfileFormValues = JSON.parse(storedProfile);
-            if (!profile.birthDate) {
-                setIsProfileMissing(true);
-                setIsLoading(false);
-                setChartData(null);
-                return;
-            }
-
-            const birthDate = new Date(profile.birthDate);
-
-            // Calculate signs first
-            const sunSign = await getSunSign(birthDate);
-            const moonSign = await getMoonZodiacSign(birthDate);
-            
-            // Then, start the AI transition
-            startTransition(async () => {
-                try {
-                    const reading = await getNatalChartReading({ sunSign, moonSign });
-                    setChartData({ ...reading, sunSign, moonSign });
-                } catch(e) {
-                    console.error("AI Reading failed", e);
-                    toast({
-                        title: "Could not generate reading",
-                        description: "The spirits are busy. Please try again later.",
-                        variant: 'destructive',
-                    });
-                    setChartData(dummyChartData); // Show dummy data on AI failure
-                }
-            });
-
-        } catch (error) {
-            console.error("Failed to load user profile or calculate chart", error);
-            setIsProfileMissing(true);
-            setChartData(null);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    // We'll run this on mount, but keep the dummy data for now
-    fetchNatalChart();
-  }, [toast]);
+  // Set the state directly to the dummy data
+  const [chartData] = useState<NatalChartData>(dummyChartData);
   
-  const renderContent = () => {
-    if (isLoading && !chartData) {
-        return (
-             <div className="flex items-center gap-4 text-foreground/70 min-h-[200px] justify-center">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                <p>Loading your profile...</p>
-            </div>
-        );
-    }
-    
-    if (isProfileMissing) {
-        return (
-            <div className="text-center text-foreground/60 p-4 space-y-4 min-h-[200px] justify-center">
-                <p>
-                    Your birth details haven't been saved yet. Please fill out your profile to generate your cosmic blueprint.
-                </p>
-                <Button asChild>
-                    <Link href="/account">Go to Profile</Link>
-                </Button>
-          </div>
-        );
-    }
-
-    if (isPending) {
-        return (
-            <div className="flex flex-col items-center justify-center text-center p-6 min-h-[200px]">
-              <Loader2 className="w-12 h-12 text-primary/80 animate-spin mb-4" />
-              <h2 className="text-xl font-headline text-foreground/90 mb-2">Consulting the Cosmos...</h2>
-              <p className="text-foreground/70">Interpreting your unique cosmic signature.</p>
-            </div>
-        )
-    }
-
-    if (chartData) {
-        return (
+  return (
+    <Card className="w-full max-w-4xl mx-auto bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+        <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-headline text-2xl text-primary justify-center">
+                Your Cosmic Blueprint
+            </CardTitle>
+            <CardDescription className="text-center">
+              An interpretation of your core astrological placements based on your birth details.
+            </CardDescription>
+        </CardHeader>
+        
+        <CardContent>
             <div className="w-full space-y-8 text-left animate-in fade-in duration-500">
                 <h2 className="text-3xl font-headline text-center text-primary">{chartData.headline}</h2>
                 <div className="grid md:grid-cols-2 gap-8">
@@ -171,25 +84,6 @@ export function HoroscopeDisplay() {
                     </CardContent>
                 </Card>
             </div>
-        )
-    }
-
-    return null;
-  }
-
-  return (
-    <Card className="w-full max-w-4xl mx-auto bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
-        <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-headline text-2xl text-primary justify-center">
-                Your Cosmic Blueprint
-            </CardTitle>
-            <CardDescription className="text-center">
-              An interpretation of your core astrological placements based on your birth details.
-            </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-            {renderContent()}
         </CardContent>
         <CardFooter>
             <p className="text-xs text-foreground/60 w-full text-center">Full natal chart with Rising Sign and house placements coming soon!</p>
@@ -197,3 +91,4 @@ export function HoroscopeDisplay() {
     </Card>
   );
 }
+
