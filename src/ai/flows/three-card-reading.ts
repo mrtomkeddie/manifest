@@ -89,7 +89,7 @@ export async function threeCardReading(input: ThreeCardReadingInput): Promise<Th
 
 const prompt = ai.definePrompt({
   name: 'threeCardReadingPrompt',
-  model: 'deepseek-chat',
+  model: 'openai/deepseek-chat',
   input: {schema: z.object({
       topic: z.string(),
       cards: z.array(InternalCardReadingSchema),
