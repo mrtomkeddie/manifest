@@ -1,17 +1,17 @@
 
 'use server';
-import { getPlanets, MOON, type ZodiacSign, type EphemerisData } from 'ephemeris';
+import ephemeris from 'ephemeris';
 
 /**
  * Gets the Zodiac sign for the Moon on a given date.
  * @param date The date for which to get the moon's zodiac sign.
  * @returns The ZodiacSign of the moon on that date.
  */
-export async function getMoonZodiacSign(date: Date): Promise<ZodiacSign> {
+export async function getMoonZodiacSign(date: Date): Promise<ephemeris.ZodiacSign> {
     try {
-        const data: EphemerisData[] = await getPlanets(date, [MOON]);
-        if (data && data.length > 0 && data[0].planets[MOON]) {
-            return data[0].planets[MOON].sign;
+        const data: ephemeris.EphemerisData[] = await ephemeris.getPlanets(date, [ephemeris.MOON]);
+        if (data && data.length > 0 && data[0].planets[ephemeris.MOON]) {
+            return data[0].planets[ephemeris.MOON].sign;
         }
         throw new Error('Could not retrieve moon sign data.');
     } catch (error) {
