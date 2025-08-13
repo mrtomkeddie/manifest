@@ -22,8 +22,7 @@ export function TarotCard({ card }: TarotCardProps) {
                  <div className="flex flex-col sm:flex-row gap-6">
                     <div className="sm:w-1/3 flex-shrink-0">
                         <Image
-                            src={`https://placehold.co/400x600.png`}
-                            data-ai-hint={card.imageKeywords}
+                            src={card.image}
                             alt={card.cardName}
                             width={400}
                             height={600}

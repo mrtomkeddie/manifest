@@ -27,6 +27,7 @@ const CardReadingSchema = z.object({
     orientation: z.string().describe('The orientation of the card, either "upright" or "reversed".'),
     meaning: z.string().describe("A 2-3 sentence mystical interpretation of the card in its specific position within the spread, tailored to the user's chosen topic."),
     imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
+    image: z.string().describe('The path to the image for the card.'),
 });
 
 const InternalCardReadingSchema = z.object({
@@ -68,10 +69,11 @@ export async function threeCardReading(input: ThreeCardReadingInput): Promise<Th
 
     const flowResult = await threeCardReadingFlow({ topic: input.topic, cards: flowInputCards });
 
-    // Combine flow result with image keywords
+    // Combine flow result with image keywords and path
     const finalCards = flowResult.cards.map((card, index) => ({
         ...card,
         imageKeywords: drawnCards[index].imageKeywords,
+        image: drawnCards[index].image,
     }));
 
     return {
@@ -86,7 +88,7 @@ const prompt = ai.definePrompt({
       topic: z.string(),
       cards: z.array(InternalCardReadingSchema),
   })},
-  output: {schema: Omit(ThreeCardReadingOutputSchema.shape, "cards")},
+  output: {schema: Omit(ThreeCardReadingOutputSchema.shape, "cards", "image", "imageKeywords")},
   prompt: `You are an insightful and wise tarot reader. A user has requested a 3-card "Past, Present, Future" reading focused on a specific topic.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
@@ -112,7 +114,7 @@ const threeCardReadingFlow = ai.defineFlow(
         topic: z.string(),
         cards: z.array(InternalCardReadingSchema),
     }),
-    outputSchema: Omit(ThreeCardReadingOutputSchema.shape, "cards")
+    outputSchema: Omit(ThreeCardReadingOutputSchema.shape, "cards", "image", "imageKeywords")
   },
   async (input) => {
     const {output} = await prompt(input);

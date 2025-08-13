@@ -27,6 +27,7 @@ const CardReadingSchema = z.object({
     orientation: z.string().describe('The orientation of the card, either "upright" or "reversed".'),
     meaning: z.string().describe("A 2-4 sentence mystical interpretation of the card in its specific position within the spread, weaving in symbolism and spiritual insight. The interpretation should be tailored to the user's chosen topic."),
     imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
+    image: z.string().describe('The path to the image for the card.'),
 });
 
 const InternalCardReadingSchema = z.object({
@@ -75,10 +76,11 @@ export async function celticCrossReading(input: CelticCrossReadingInput): Promis
 
     const flowResult = await celticCrossReadingFlow({ topic: input.topic, cards: flowInputCards });
 
-    // Combine flow result with image keywords
+    // Combine flow result with image keywords and path
     const finalCards = flowResult.cards.map((card, index) => ({
         ...card,
         imageKeywords: drawnCards[index].imageKeywords,
+        image: drawnCards[index].image,
     }));
 
     return {
@@ -93,7 +95,7 @@ const prompt = ai.definePrompt({
     topic: z.string(),
     cards: z.array(InternalCardReadingSchema),
   })},
-  output: {schema: Omit(CelticCrossReadingOutputSchema.shape, "cards")},
+  output: {schema: Omit(CelticCrossReadingOutputSchema.shape, "cards", "image", "imageKeywords")},
   prompt: `You are a deeply intuitive and wise tarot reader with a mystical and spiritual presence. A user has requested a 10-card Celtic Cross reading focused on a specific topic. Your language should be warm, insightful, and rich with symbolism. Avoid generic advice and focus on providing profound spiritual guidance tailored to the user's area of interest.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
@@ -118,7 +120,7 @@ const celticCrossReadingFlow = ai.defineFlow(
         topic: z.string(),
         cards: z.array(InternalCardReadingSchema),
     }),
-    outputSchema: Omit(CelticCrossReadingOutputSchema.shape, "cards"),
+    outputSchema: Omit(CelticCrossReadingOutputSchema.shape, "cards", "image", "imageKeywords"),
   },
   async (input) => {
     const {output} = await prompt(input);

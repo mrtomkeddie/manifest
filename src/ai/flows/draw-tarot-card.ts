@@ -23,6 +23,7 @@ const DrawTarotCardOutputSchema = z.object({
   meaning: z.string().describe("A 2-3 sentence interpretation of the provided card meaning in its specific orientation."),
   affirmation: z.string().describe('A short, powerful affirmation related to the card\'s meaning.'),
   imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
+  image: z.string().describe('The path to the image for the card.'),
 });
 export type DrawTarotCardOutput = z.infer<typeof DrawTarotCardOutputSchema>;
 
@@ -41,14 +42,14 @@ export async function drawTarotCard(): Promise<DrawTarotCardOutput> {
         meaning
     });
 
-    // 4. Add the image keywords from the deck to the final result.
-    return { ...result, imageKeywords: card.imageKeywords };
+    // 4. Add the image keywords and image path from the deck to the final result.
+    return { ...result, imageKeywords: card.imageKeywords, image: card.image };
 }
 
 const prompt = ai.definePrompt({
   name: 'drawTarotCardPrompt',
   input: {schema: DrawTarotCardInputSchema},
-  output: {schema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords")},
+  output: {schema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords", "image")},
   prompt: `You are a mystical tarot reader. A user has drawn their daily card. 
   
   The card is the **{{{cardName}}} ({{{orientation}}})**.
@@ -66,7 +67,7 @@ const drawTarotCardFlow = ai.defineFlow(
   {
     name: 'drawTarotCardFlow',
     inputSchema: DrawTarotCardInputSchema,
-    outputSchema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords"),
+    outputSchema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords", "image"),
   },
   async (input) => {
     const {output} = await prompt(input);

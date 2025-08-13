@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useTransition } from 'react';
 import { threeCardReading, type ThreeCardReadingOutput } from '@/ai/flows/three-card-reading';
@@ -98,8 +97,7 @@ export function ThreeCardDisplay() {
                         </CardHeader>
                         <CardContent className="flex flex-col items-center gap-4">
                             <Image
-                                src={`https://placehold.co/400x600.png`}
-                                data-ai-hint={card.imageKeywords}
+                                src={card.image}
                                 alt={card.cardName}
                                 width={200}
                                 height={300}

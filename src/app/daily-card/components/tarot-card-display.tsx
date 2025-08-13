@@ -59,8 +59,7 @@ export function TarotCardDisplay() {
                 <div className="md:flex md:flex-row">
                     <div className="md:w-1/3 p-6 flex flex-col items-center justify-center">
                         <Image
-                            src={`https://placehold.co/400x600.png`}
-                            data-ai-hint={result.imageKeywords}
+                            src={result.image}
                             alt={result.cardName}
                             width={400}
                             height={600}
