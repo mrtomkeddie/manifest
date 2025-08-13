@@ -1,6 +1,6 @@
 
 'use server';
-import ephemeris from 'ephemeris';
+import * as ephemeris from 'ephemeris';
 
 /**
  * Gets the Zodiac sign for the Moon on a given date.
