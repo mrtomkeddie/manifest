@@ -36,7 +36,7 @@ const mainNav = [
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
   { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
-  { href: '/astrology', icon: <Sun />, label: 'Astrology' },
+  { href: '/astrology', icon: <Sun />, label: 'Natal Chart' },
 ];
 
 const memberNav = [
@@ -45,7 +45,7 @@ const memberNav = [
 ];
 
 const footerNav = [
-    { href: '/account', icon: <User />, label: 'Account' },
+    { href: '/account', icon: <User />, label: 'My Profile' },
     { href: '/logout', icon: <LogOut />, label: 'Logout' },
 ]
 
