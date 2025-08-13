@@ -1,5 +1,3 @@
-'use server';
-
 import { genkit } from 'genkit';
 import openAI from '@genkit-ai/compat-oai';
 import { ModelInfo } from 'genkit/model';
@@ -25,10 +23,9 @@ export const ai = genkit({
         { name: 'deepseek-chat', info: chatInfo },
         { name: 'deepseek-reasoner', info: reasonerInfo },
       ],
+      model: 'deepseek-chat',
     }),
   ],
-  // Make DeepSeek your default
-  model: 'openai/deepseek-chat',
   telemetry: {
     instrumentation: {
       llm: true,
