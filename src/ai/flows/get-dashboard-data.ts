@@ -12,7 +12,6 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { customTarotDeck } from '@/lib/tarot-deck';
-import { getMoonZodiacSign } from '@/services/astrology-service';
 import { getDailyReading } from './get-daily-reading';
 import { generateAffirmation } from './generate-affirmation';
 import { getDailyAngelNumber } from './get-daily-angel-number';
@@ -83,13 +82,44 @@ export async function getDashboardData(input: GetDashboardDataInput): Promise<Ge
     return dashboardCache.data;
   }
 
-  console.log('Generating new dashboard data for', today);
-  const newData = await getDashboardDataFlow(input);
-  dashboardCache = {
-    date: today,
-    data: newData,
-  };
-  return newData;
+  try {
+    console.log('Generating new dashboard data for', today);
+    const newData = await getDashboardDataFlow(input);
+    dashboardCache = {
+      date: today,
+      data: newData,
+    };
+    return newData;
+  } catch (error) {
+     console.error("Failed to generate dashboard data, returning fallback.", error);
+     const fallbackCard = customTarotDeck[0];
+     return {
+        dailyReading: { reading: "The cosmos is quiet today. Take a moment for peaceful reflection." },
+        affirmation: { affirmation: "I am open to the universe's guidance.", usageTip: "Breathe deeply and trust your path." },
+        angelNumber: {
+            number: '111',
+            meaning: {
+                topic: 'General',
+                meaning: "A sign of new beginnings and alignment. The universe is listening.",
+                affirmation: "I am aligned with my highest purpose."
+            }
+        },
+        moonPhase: {
+            phaseName: "Celestial Haze",
+            zodiacSign: "Mystery",
+            description: "The celestial energies are swirling today. It's a good day for introspection.",
+            imageKeywords: "night sky",
+        },
+        tarotCard: {
+            cardName: fallbackCard.name,
+            orientation: 'upright',
+            meaning: fallbackCard.meaning_upright,
+            affirmation: "I trust in the unfolding of my journey.",
+            imageKeywords: fallbackCard.imageKeywords,
+            image: fallbackCard.image,
+        },
+     }
+  }
 }
 
 const tarotPrompt = ai.definePrompt({
@@ -127,41 +157,19 @@ const getDashboardDataFlow = ai.defineFlow(
       moonPhaseResult,
       tarotMeaningResult,
     ] = await Promise.all([
-      getDailyReading().catch((e) => {
-        console.error("Failed to get daily reading:", e);
-        return { reading: "The cosmos is quiet today. Take a moment for peaceful reflection." };
-      }),
-      generateAffirmation({ category: 'confidence' }).catch((e) => {
-        console.error("Failed to generate affirmation:", e);
-        return { affirmation: "I am open to the universe's guidance.", usageTip: "Breathe deeply and trust your path." };
-      }),
-      getDailyAngelNumber().catch((e) => {
-        console.error("Failed to get daily angel number, using fallback.", e);
-        return { number: "111" };
-      }),
-      getMoonPhase(input).catch((e) => {
-        console.error("Failed to get moon phase:", e);
-        return { phaseName: "Celestial Haze", zodiacSign: "Mystery", description: "The celestial energies are swirling today. It's a good day for introspection.", imageKeywords: "night sky", ritual: "", affirmation: "", starsReading: "", combinedInsight: "" };
-      }),
+      getDailyReading(),
+      generateAffirmation({ category: 'confidence' }),
+      getDailyAngelNumber(),
+      getMoonPhase(input),
       tarotPrompt({
         cardName: card.name,
         orientation: orientation,
         meaning: meaning
-      }).then(res => res.output!).catch((e) => {
-        console.error("Failed to get tarot meaning:", e);
-        return { meaning: "The cards are veiled today, suggesting a time for quiet contemplation rather than action.", affirmation: "I trust in the unfolding of my journey." };
-      }),
+      }).then(res => res.output!),
     ]);
     
     // Get angel number meaning, now with a guaranteed number
-    const angelNumberMeaningResult = await getAngelNumberMeaning({ number: angelNumberResult.number, topics: ['General'] }).catch((e) => {
-        console.error("Failed to get angel number meaning:", e);
-        return { readings: [{
-            topic: 'General',
-            meaning: "A sign of new beginnings and alignment. The universe is listening.",
-            affirmation: "I am aligned with my highest purpose."
-        }]};
-    });
+    const angelNumberMeaningResult = await getAngelNumberMeaning({ number: angelNumberResult.number, topics: ['General'] });
 
     const tarotOutput: GetDashboardDataOutput['tarotCard'] = {
         cardName: card.name,

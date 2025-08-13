@@ -20,8 +20,28 @@ const fallbackReading: DailyReadingOutput = {
     reading: "The cosmos is alive with energy today. Take a moment to breathe deeply, center yourself, and remember the powerful creator you are. Your intuition is your most trusted guide—listen to its whispers. You have everything you need to make today magical."
 };
 
+// Caching logic
+let readingCache: { date: string; data: DailyReadingOutput | null } = {
+  date: '',
+  data: null,
+};
+
 export async function getDailyReading(): Promise<DailyReadingOutput> {
-  return getDailyReadingFlow();
+  const today = new Date().toISOString().split('T')[0];
+  if (readingCache.date === today && readingCache.data) {
+    console.log('Returning cached daily reading for', today);
+    return readingCache.data;
+  }
+
+  try {
+    console.log('Generating new daily reading for', today);
+    const newData = await getDailyReadingFlow();
+    readingCache = { date: today, data: newData };
+    return newData;
+  } catch (error) {
+    console.error("AI call for daily reading failed, returning fallback.", error);
+    return fallbackReading;
+  }
 }
 
 const prompt = ai.definePrompt({
@@ -60,16 +80,11 @@ const getDailyReadingFlow = ai.defineFlow(
     outputSchema: DailyReadingOutputSchema,
   },
   async () => {
-    try {
-        const {output} = await prompt({});
-        if (!output) {
-            console.error("AI output for daily reading was null or undefined, returning fallback.");
-            return fallbackReading;
-        }
-        return output;
-    } catch (error) {
-        console.error("AI call for daily reading failed, returning fallback data.", error);
-        return fallbackReading;
+    const {output} = await prompt({});
+    if (!output) {
+      console.error("AI output for daily reading was null or undefined.");
+      throw new Error("Invalid AI output.");
     }
+    return output;
   }
 );

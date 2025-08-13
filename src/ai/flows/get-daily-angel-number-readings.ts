@@ -32,13 +32,27 @@ export async function getDailyAngelNumberReadings(): Promise<DailyAngelNumberRea
     return readingsCache.data;
   }
   
-  console.log('Generating new daily angel number readings for', today);
-  const newData = await getDailyAngelNumberReadingsFlow();
-  readingsCache = {
-    date: today,
-    data: newData,
-  };
-  return newData;
+  try {
+    console.log('Generating new daily angel number readings for', today);
+    const newData = await getDailyAngelNumberReadingsFlow();
+    readingsCache = {
+      date: today,
+      data: newData,
+    };
+    return newData;
+  } catch (error) {
+    console.error("Failed to generate daily angel number readings, returning fallback.", error);
+    // This provides a basic fallback structure.
+    const fallbackNumber = "111";
+    return {
+      number: fallbackNumber,
+      readings: allTopics.map(topic => ({
+        topic,
+        meaning: `The energies for ${topic} are aligning. A sign of new beginnings.`,
+        affirmation: "I am open to the universe's guidance and new opportunities."
+      }))
+    };
+  }
 }
 
 
