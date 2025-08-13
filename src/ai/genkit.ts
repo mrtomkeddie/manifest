@@ -23,9 +23,9 @@ export const ai = genkit({
         { name: 'deepseek-chat', info: chatInfo },
         { name: 'deepseek-reasoner', info: reasonerInfo },
       ],
+      model: 'deepseek-chat', // Set default model within the plugin
     }),
   ],
-  model: 'openai/deepseek-chat',
   telemetry: {
     instrumentation: {
       llm: true,
