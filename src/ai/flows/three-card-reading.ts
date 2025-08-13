@@ -2,7 +2,7 @@
 'use server';
 
 /**
- * @fileOverview A 3-card tarot reading AI agent.
+ * @fileOverview A 3-card tarot reading AI agent using a custom deck.
  *
  * - threeCardReading - A function that handles the 3-card reading process.
  * - ThreeCardReadingInput - The input type for the threeCardReading function.
@@ -11,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { customTarotDeck, type TarotCard } from '@/lib/tarot-deck';
 
 const ThreeCardReadingInputSchema = z.object({
   topic: z
@@ -18,6 +19,7 @@ const ThreeCardReadingInputSchema = z.object({
     .describe("The user's area of focus for the reading (e.g., 'Love', 'Career', 'General')."),
 });
 export type ThreeCardReadingInput = z.infer<typeof ThreeCardReadingInputSchema>;
+
 
 const CardReadingSchema = z.object({
     positionName: z.string().describe("The name of the position in the spread (Past, Present, Future)."),
@@ -27,6 +29,13 @@ const CardReadingSchema = z.object({
     imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
 });
 
+const InternalCardReadingSchema = z.object({
+    positionName: z.string(),
+    cardName: z.string(),
+    orientation: z.enum(['upright', 'reversed']),
+    meaning: z.string(),
+});
+
 const ThreeCardReadingOutputSchema = z.object({
     cards: z.array(CardReadingSchema).length(3).describe("An array of 3 tarot card readings for Past, Present, and Future."),
     summary: z.string().describe("A 3-4 sentence summary that synthesizes the 3-card reading into a cohesive narrative, offering overarching guidance related to the user's chosen topic."),
@@ -34,37 +43,76 @@ const ThreeCardReadingOutputSchema = z.object({
 export type ThreeCardReadingOutput = z.infer<typeof ThreeCardReadingOutputSchema>;
 
 export async function threeCardReading(input: ThreeCardReadingInput): Promise<ThreeCardReadingOutput> {
-  return threeCardReadingFlow(input);
+    const positions = ['Past', 'Present', 'Future'];
+    let drawnCards: TarotCard[] = [];
+    let flowInputCards = [];
+
+    while(drawnCards.length < 3) {
+        const card = customTarotDeck[Math.floor(Math.random() * customTarotDeck.length)];
+        if (!drawnCards.find(c => c.name === card.name)) {
+            drawnCards.push(card);
+        }
+    }
+
+    for (let i = 0; i < 3; i++) {
+        const card = drawnCards[i];
+        const orientation = Math.random() > 0.5 ? 'upright' : 'reversed';
+        const meaning = orientation === 'upright' ? card.meaning_upright : card.meaning_reversed;
+        flowInputCards.push({
+            positionName: positions[i],
+            cardName: card.name,
+            orientation,
+            meaning,
+        });
+    }
+
+    const flowResult = await threeCardReadingFlow({ topic: input.topic, cards: flowInputCards });
+
+    // Combine flow result with image keywords
+    const finalCards = flowResult.cards.map((card, index) => ({
+        ...card,
+        imageKeywords: drawnCards[index].imageKeywords,
+    }));
+
+    return {
+        cards: finalCards,
+        summary: flowResult.summary,
+    };
 }
 
 const prompt = ai.definePrompt({
   name: 'threeCardReadingPrompt',
-  input: {schema: ThreeCardReadingInputSchema},
-  output: {schema: ThreeCardReadingOutputSchema},
-  prompt: `You are an insightful and wise tarot reader. A user has requested a 3-card "Past, Present, Future" reading focused on a specific topic. Your language should be warm, insightful, and clear.
+  input: {schema: z.object({
+      topic: z.string(),
+      cards: z.array(InternalCardReadingSchema),
+  })},
+  output: {schema: Omit(ThreeCardReadingOutputSchema.shape, "cards")},
+  prompt: `You are an insightful and wise tarot reader. A user has requested a 3-card "Past, Present, Future" reading focused on a specific topic.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
 
+  The cards drawn are:
+  {{#each cards}}
+  - **{{positionName}}**: {{cardName}} ({{orientation}})
+    - Core Meaning: "{{meaning}}"
+  {{/each}}
+  
   Perform the following steps:
-  1.  Randomly draw 3 cards from the 78-card tarot deck.
-  2.  For each card, randomly determine its orientation ("upright" or "reversed").
-  3.  Assign each card to one of the 3 positions of the spread, in order.
-  4.  Provide a meaningful interpretation for each card based on its position, orientation, and its relevance to the user's chosen topic: **{{{topic}}}**.
-  5.  Provide a final summary that weaves the three card meanings into a cohesive story, offering guidance specifically for their chosen topic.
-
-  The 3 positions of the spread are:
-  1.  **Past**: Represents the past events and foundations of the situation regarding the topic.
-  2.  **Present**: Represents the current state of the situation and the immediate challenge or focus.
-  3.  **Future**: Represents the potential outcome and the direction the situation is heading.
+  1. For each card, provide a 2-3 sentence mystical interpretation based on its provided core meaning, its position in the spread (Past, Present, Future), and its relevance to the user's chosen topic: **{{{topic}}}**.
+  2. Provide a final summary of 3-4 sentences that weaves the three card interpretations into a cohesive story, offering guidance specifically for their chosen topic.
 
   Return the full reading in the specified format. Do not add any conversational text.`,
 });
 
+
 const threeCardReadingFlow = ai.defineFlow(
   {
     name: 'threeCardReadingFlow',
-    inputSchema: ThreeCardReadingInputSchema,
-    outputSchema: ThreeCardReadingOutputSchema,
+    inputSchema: z.object({
+        topic: z.string(),
+        cards: z.array(InternalCardReadingSchema),
+    }),
+    outputSchema: Omit(ThreeCardReadingOutputSchema.shape, "cards")
   },
   async (input) => {
     const {output} = await prompt(input);

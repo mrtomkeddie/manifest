@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview A tarot card drawing AI agent.
+ * @fileOverview A tarot card drawing AI agent using a custom deck.
  *
  * - drawTarotCard - A function that handles the tarot card drawing process.
  * - DrawTarotCardOutput - The return type for the drawTarotCard function.
@@ -9,32 +9,55 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { customTarotDeck, type TarotCard } from '@/lib/tarot-deck';
+
+const DrawTarotCardInputSchema = z.object({
+  cardName: z.string(),
+  orientation: z.enum(['upright', 'reversed']),
+  meaning: z.string(),
+});
 
 const DrawTarotCardOutputSchema = z.object({
-  cardName: z.string().describe('The name of the tarot card (e.g., "The Fool").'),
-  orientation: z.string().describe('The orientation of the card, either "upright" or "reversed".'),
-  meaning: z.string().describe("A 2-3 sentence interpretation of the card in its specific orientation."),
+  cardName: z.string().describe('The name of the tarot card provided.'),
+  orientation: z.string().describe('The orientation of the card provided.'),
+  meaning: z.string().describe("A 2-3 sentence interpretation of the provided card meaning in its specific orientation."),
   affirmation: z.string().describe('A short, powerful affirmation related to the card\'s meaning.'),
   imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
 });
 export type DrawTarotCardOutput = z.infer<typeof DrawTarotCardOutputSchema>;
 
 export async function drawTarotCard(): Promise<DrawTarotCardOutput> {
-  return drawTarotCardFlow();
+    // 1. Randomly select one card from the custom deck.
+    const card = customTarotDeck[Math.floor(Math.random() * customTarotDeck.length)];
+    
+    // 2. Randomly determine its orientation.
+    const orientation = Math.random() > 0.5 ? 'upright' : 'reversed';
+    const meaning = orientation === 'upright' ? card.meaning_upright : card.meaning_reversed;
+
+    // 3. Call the flow with the selected card data.
+    const result = await drawTarotCardFlow({
+        cardName: card.name,
+        orientation,
+        meaning
+    });
+
+    // 4. Add the image keywords from the deck to the final result.
+    return { ...result, imageKeywords: card.imageKeywords };
 }
 
 const prompt = ai.definePrompt({
   name: 'drawTarotCardPrompt',
-  output: {schema: DrawTarotCardOutputSchema},
-  prompt: `You are a mystical tarot reader. A user has asked for their daily card. 
+  input: {schema: DrawTarotCardInputSchema},
+  output: {schema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords")},
+  prompt: `You are a mystical tarot reader. A user has drawn their daily card. 
+  
+  The card is the **{{{cardName}}} ({{{orientation}}})**.
 
-  Perform the following steps:
-  1.  Randomly select one of the 78 tarot cards from the Major or Minor Arcana.
-  2.  Randomly determine if the card is "upright" or "reversed".
-  3.  Provide the card's name.
-  4.  Provide its meaning for the selected orientation in 2-3 concise sentences.
-  5.  Provide a powerful, short affirmation related to the card's meaning.
-  6.  Provide one or two keywords for generating an image of the card (e.g., "tarot sun", "tarot fool").
+  The core meaning is: "{{{meaning}}}"
+
+  Based on this core meaning, provide the following:
+  1.  A 2-3 sentence interpretation of this card for a daily reading.
+  2.  A powerful, short affirmation related to the card's message.
   
   Return the information in the specified format. Do not add any conversational text.`,
 });
@@ -42,10 +65,11 @@ const prompt = ai.definePrompt({
 const drawTarotCardFlow = ai.defineFlow(
   {
     name: 'drawTarotCardFlow',
-    outputSchema: DrawTarotCardOutputSchema,
+    inputSchema: DrawTarotCardInputSchema,
+    outputSchema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords"),
   },
-  async () => {
-    const {output} = await prompt();
+  async (input) => {
+    const {output} = await prompt(input);
     return output!;
   }
 );

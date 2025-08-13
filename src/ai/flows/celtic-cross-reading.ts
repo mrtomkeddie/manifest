@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview A Celtic Cross tarot reading AI agent.
+ * @fileOverview A Celtic Cross tarot reading AI agent using a custom deck.
  *
  * - celticCrossReading - A function that handles the Celtic Cross reading process.
  * - CelticCrossReadingInput - The input type for the celticCrossReading function.
@@ -10,6 +10,8 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { customTarotDeck, type TarotCard } from '@/lib/tarot-deck';
+
 
 const CelticCrossReadingInputSchema = z.object({
   topic: z
@@ -27,6 +29,14 @@ const CardReadingSchema = z.object({
     imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
 });
 
+const InternalCardReadingSchema = z.object({
+    positionName: z.string(),
+    positionNumber: z.number(),
+    cardName: z.string(),
+    orientation: z.enum(['upright', 'reversed']),
+    meaning: z.string(),
+});
+
 const CelticCrossReadingOutputSchema = z.object({
     cards: z.array(CardReadingSchema).length(10).describe("An array of 10 tarot card readings, one for each position in the Celtic Cross spread."),
     summary: z.string().describe("A 4-6 sentence summary that synthesizes the entire 10-card reading into a cohesive narrative, offering overarching guidance and insight related to the user's chosen topic."),
@@ -34,35 +44,69 @@ const CelticCrossReadingOutputSchema = z.object({
 export type CelticCrossReadingOutput = z.infer<typeof CelticCrossReadingOutputSchema>;
 
 export async function celticCrossReading(input: CelticCrossReadingInput): Promise<CelticCrossReadingOutput> {
-  return celticCrossReadingFlow(input);
+    const positions = [
+        "The Self / The Heart of the Matter", "The Challenge / Crossing Card", "The Past / Foundation", 
+        "The Recent Past / Below", "The Potential Outcome / Above", "The Near Future / Before",
+        "The Self / Advice", "External Influences / The Environment", "Hopes and Fears", "The Final Outcome"
+    ];
+
+    let drawnCards: TarotCard[] = [];
+    let flowInputCards = [];
+
+    while(drawnCards.length < 10) {
+        const card = customTarotDeck[Math.floor(Math.random() * customTarotDeck.length)];
+        if (!drawnCards.find(c => c.name === card.name)) {
+            drawnCards.push(card);
+        }
+    }
+    
+    for (let i = 0; i < 10; i++) {
+        const card = drawnCards[i];
+        const orientation = Math.random() > 0.5 ? 'upright' : 'reversed';
+        const meaning = orientation === 'upright' ? card.meaning_upright : card.meaning_reversed;
+        flowInputCards.push({
+            positionName: positions[i],
+            positionNumber: i + 1,
+            cardName: card.name,
+            orientation,
+            meaning,
+        });
+    }
+
+    const flowResult = await celticCrossReadingFlow({ topic: input.topic, cards: flowInputCards });
+
+    // Combine flow result with image keywords
+    const finalCards = flowResult.cards.map((card, index) => ({
+        ...card,
+        imageKeywords: drawnCards[index].imageKeywords,
+    }));
+
+    return {
+        cards: finalCards,
+        summary: flowResult.summary,
+    };
 }
 
 const prompt = ai.definePrompt({
   name: 'celticCrossReadingPrompt',
-  input: {schema: CelticCrossReadingInputSchema},
-  output: {schema: CelticCrossReadingOutputSchema},
+  input: {schema: z.object({
+    topic: z.string(),
+    cards: z.array(InternalCardReadingSchema),
+  })},
+  output: {schema: Omit(CelticCrossReadingOutputSchema.shape, "cards")},
   prompt: `You are a deeply intuitive and wise tarot reader with a mystical and spiritual presence. A user has requested a 10-card Celtic Cross reading focused on a specific topic. Your language should be warm, insightful, and rich with symbolism. Avoid generic advice and focus on providing profound spiritual guidance tailored to the user's area of interest.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
 
-  Perform the following steps:
-  1.  Randomly draw 10 cards from the 78-card tarot deck.
-  2.  For each card, randomly determine its orientation ("upright" or "reversed").
-  3.  Assign each card to one of the 10 positions of the Celtic Cross spread, in order.
-  4.  Provide a deep, meaningful interpretation for each card based on its position, orientation, and its relevance to the user's chosen topic: **{{{topic}}}**.
-  5.  Provide a final summary that weaves the individual card meanings into a cohesive story for the querent, offering guidance specifically for their chosen topic.
+  The cards drawn for each position are:
+  {{#each cards}}
+  - **Position {{positionNumber}}. {{positionName}}**: {{cardName}} ({{orientation}})
+    - Core Meaning: "{{meaning}}"
+  {{/each}}
 
-  The 10 positions of the Celtic Cross are:
-  1.  **The Self / The Heart of the Matter**: Represents the querent and the core of their situation regarding the topic.
-  2.  **The Challenge / Crossing Card**: The immediate obstacle or challenge at hand regarding the topic.
-  3.  **The Past / Foundation**: The past events and foundations of the situation regarding the topic.
-  4.  **The Recent Past / Below**: Events that have just passed, now moving into the subconscious, related to the topic.
-  5.  **The Potential Outcome / Above**: The best possible outcome that can be achieved regarding the topic.
-  6.  **The Near Future / Before**: What is likely to happen in the immediate future regarding the topic.
-  7.  **The Self / Advice**: The querent's attitude and perspective on the situation regarding the topic.
-  8.  **External Influences / The Environment**: The people, energies, or environment surrounding the querent regarding the topic.
-  9.  **Hopes and Fears**: The querent's deepest hopes and fears regarding the topic.
-  10. **The Final Outcome**: The ultimate result or culmination of the situation regarding the topic.
+  Perform the following steps:
+  1.  For each of the 10 cards, provide a deep, meaningful interpretation (2-4 sentences) based on its provided core meaning, its specific position in the Celtic Cross spread, and its relevance to the user's chosen topic: **{{{topic}}}**.
+  2.  Provide a final summary (4-6 sentences) that weaves the individual card interpretations into a cohesive story for the querent, offering guidance specifically for their chosen topic.
 
   Return the full reading in the specified format. Do not add any conversational text.`,
 });
@@ -70,8 +114,11 @@ const prompt = ai.definePrompt({
 const celticCrossReadingFlow = ai.defineFlow(
   {
     name: 'celticCrossReadingFlow',
-    inputSchema: CelticCrossReadingInputSchema,
-    outputSchema: CelticCrossReadingOutputSchema,
+    inputSchema: z.object({
+        topic: z.string(),
+        cards: z.array(InternalCardReadingSchema),
+    }),
+    outputSchema: Omit(CelticCrossReadingOutputSchema.shape, "cards"),
   },
   async (input) => {
     const {output} = await prompt(input);
