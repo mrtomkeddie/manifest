@@ -129,7 +129,13 @@ const getDashboardDataFlow = ai.defineFlow(
         return { phaseName: "Celestial Haze", zodiacSign: "Mystery", description: "The celestial energies are swirling today. It's a good day for introspection.", imageKeywords: "night sky", ritual: "", affirmation: "", starsReading: "", combinedInsight: "" };
       }),
       ai.generate({
-          prompt: `You are a mystical tarot reader. Interpret the card **${card.name} (${orientation})** with the core meaning: "${meaning}". Provide a 2-3 sentence interpretation for a daily reading, and a powerful, short affirmation.`,
+          prompt: `You are a mystical tarot reader. Interpret the card **${card.name} (${orientation})** which has the core meaning: "${meaning}".
+          
+          You must provide:
+          1.  A 2-3 sentence interpretation for a daily reading.
+          2.  A powerful, short affirmation.
+          
+          Return ONLY the JSON object with 'meaning' and 'affirmation' fields. Do not add any conversational text or markdown.`,
           output: {
               schema: z.object({
                   meaning: z.string(),
@@ -144,7 +150,7 @@ const getDashboardDataFlow = ai.defineFlow(
     
     // Get angel number meaning, now with a guaranteed number
     const angelNumberMeaningResult = await getAngelNumberMeaning({ number: angelNumberResult.number, topics: ['General'] }).catch((e) => {
-        console.error("Failed to get angel number meaning, using fallback.", e);
+        console.error("Failed to get angel number meaning:", e);
         return { readings: [{
             topic: 'General',
             meaning: "A sign of new beginnings and alignment. The universe is listening.",
@@ -178,5 +184,3 @@ const getDashboardDataFlow = ai.defineFlow(
     };
   }
 );
-
-    
