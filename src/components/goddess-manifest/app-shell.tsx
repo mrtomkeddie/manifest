@@ -25,6 +25,7 @@ import {
   Menu,
   Feather,
   LayoutDashboard,
+  Sun,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '../ui/button';
@@ -36,7 +37,7 @@ const mainNav = [
   { href: '/tarot-cards', icon: <Sparkles />, label: 'Tarot Cards' },
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
-  { href: '/moon', icon: <Moon />, label: 'Moon & Stars' },
+  { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
 ];
 
 const memberNav = [

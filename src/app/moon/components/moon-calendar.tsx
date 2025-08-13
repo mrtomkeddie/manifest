@@ -11,7 +11,6 @@ import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Calendar } from "@/components/ui/calendar"
-import { HoroscopeDisplay } from './horoscope-display';
 import { Separator } from '@/components/ui/separator';
 
 function formatDate(date: Date) {
@@ -42,6 +41,12 @@ export function MoonCalendar() {
       }
     });
   };
+  
+  // Fetch reading for the initial date on component mount
+  useEffect(() => {
+    handleGetReading();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -139,15 +144,11 @@ export function MoonCalendar() {
             )}
 
             {!isPending && !result && (
-                <div className="text-center text-foreground/60 min-h-[300px] flex flex-col justify-center items-center">
+                <div className="text-center text-foreground/60 min-h-[300px] flex flex-col justify-content items-center">
                     <Moon className="w-16 h-16 mx-auto mb-4 text-primary/50" />
                     <h2 className="text-2xl font-headline">Select a date</h2>
                     <p>Choose a date and your hemisphere to reveal the cosmic guidance.</p>
                 </div>
-            )}
-
-            {!isPending && (
-                <HoroscopeDisplay />
             )}
         </div>
     </div>
