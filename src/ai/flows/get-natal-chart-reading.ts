@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GetNatalChartReadingInputSchema = z.object({
+const GetNatalChartReadingInputSchema = z.object({
   sunSign: z
     .string()
     .describe('The user\'s Sun sign (e.g., "Aries", "Taurus").'),
@@ -22,7 +22,7 @@ export const GetNatalChartReadingInputSchema = z.object({
 });
 export type GetNatalChartReadingInput = z.infer<typeof GetNatalChartReadingInputSchema>;
 
-export const GetNatalChartReadingOutputSchema = z.object({
+const GetNatalChartReadingOutputSchema = z.object({
     headline: z.string().describe("A catchy, empowering headline for the reading, like 'The Visionary Pioneer' or 'The Nurturing Diplomat'."),
     sunSignInterpretation: z.string().describe("A 2-3 sentence interpretation of the Sun sign's influence on the user's core identity, ego, and life force. Use mystical and empowering language."),
     moonSignInterpretation: z.string().describe("A 2-3 sentence interpretation of the Moon sign's influence on the user's emotional world, intuition, and inner self. Use mystical and empowering language."),
