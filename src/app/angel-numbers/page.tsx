@@ -1,25 +1,23 @@
+
 import { AppShell } from '@/components/goddess-manifest/app-shell'
 import { AngelNumberLookup } from './components/angel-number-lookup'
-import { DailyAngelNumberReadings } from './components/daily-angel-number-readings'
-import { Separator } from '@/components/ui/separator'
+import { getDailyAngelNumber } from '@/ai/flows/get-daily-angel-number'
 
-export default function AngelNumbersPage() {
+export default async function AngelNumbersPage() {
+  const { number } = await getDailyAngelNumber();
+
   return (
     <AppShell title="Angel Numbers">
       <div className="flex flex-col w-full gap-12">
         
-        <DailyAngelNumberReadings />
-
-        <Separator className="my-4 bg-primary/20" />
-
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl font-headline text-primary mb-2">Decode Your Signs</h2>
+          <h1 className="text-3xl font-headline text-primary mb-2">Today's Angel Number is <span className="tracking-widest">{number}</span></h1>
           <p className="text-foreground/80">
-            Are you seeing other repeating numbers? Enter a sequence below to uncover the universe's message for you.
+            This is the universe's message for you today. Select a topic below to see how it applies to different areas of your life, or enter any number sequence to decode its meaning.
           </p>
         </div>
 
-        <AngelNumberLookup />
+        <AngelNumberLookup dailyNumber={number} />
       </div>
     </AppShell>
   )
