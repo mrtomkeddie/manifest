@@ -12,6 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { customTarotDeck } from '@/lib/tarot-deck';
+import { getMoonZodiacSign } from '@/services/astrology-service';
 
 
 const GetDashboardDataInputSchema = z.object({
@@ -26,6 +27,7 @@ export type GetDashboardDataInput = z.infer<typeof GetDashboardDataInputSchema>;
 const GetMoonPhaseInternalInputSchema = z.object({
   date: z.string(),
   phaseName: z.string(),
+  zodiacSign: z.string(),
   isNorthernHemisphere: z.boolean(),
 });
 
@@ -58,9 +60,8 @@ const GetDashboardDataOutputSchema = z.object({
     moonPhase: z.object({
       imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
       phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
-      description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
-      ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
-      affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
+      zodiacSign: z.string().describe('The zodiac sign the moon is currently in.'),
+      description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon's energy based on its phase, sign, and hemisphere."),
     }),
 });
 
@@ -111,8 +112,10 @@ Please generate:
 3.  **A Daily Angel Number:** Provide a common angel number, its general spiritual meaning, and a related affirmation.
 4.  **A Moon Phase Reading:**
     -   The calculated moon phase is "{{{phaseName}}}".
-    -   Provide a hemisphere-specific spiritual interpretation (2-3 sentences), a simple ritual, and a powerful affirmation for this moon phase.
+    -   The moon's zodiac sign is "{{{zodiacSign}}}".
+    -   Provide a 2-3 sentence spiritual interpretation of the moon's energy based on its phase, the sign "{{{zodiacSign}}}", and the user's hemisphere.
     -   Provide image keywords for the moon phase (e.g., "full moon", "waning crescent").
+    -   Confirm the phaseName and zodiacSign in the output.
 
 Return everything in the specified JSON format, except for the tarot card which will be added separately.
 `,
@@ -140,7 +143,9 @@ const getDashboardDataFlow = ai.defineFlow(
     const phaseIndex = Math.floor((phase * 8 + 0.5) % 8);
     const phaseName = phases[phaseIndex];
 
-    const {output} = await prompt({ date: input.date, phaseName, isNorthernHemisphere: input.isNorthernHemisphere });
+    const zodiacSign = await getMoonZodiacSign(date);
+
+    const {output} = await prompt({ date: input.date, phaseName, zodiacSign, isNorthernHemisphere: input.isNorthernHemisphere });
 
     // Manually add the tarot card to the output
     const card = customTarotDeck[Math.floor(Math.random() * customTarotDeck.length)];

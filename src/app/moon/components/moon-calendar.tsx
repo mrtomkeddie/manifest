@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Calendar } from "@/components/ui/calendar"
 import { HoroscopeDisplay } from './horoscope-display';
+import { Separator } from '@/components/ui/separator';
 
 function formatDate(date: Date) {
     return format(date, 'yyyy-MM-dd');
@@ -35,7 +36,7 @@ export function MoonCalendar() {
         console.error(e);
         toast({
           title: 'Error',
-          description: 'Could not fetch the moon phase. Please try again later.',
+          description: 'Could not fetch the moon phase reading. Please try again later.',
           variant: 'destructive',
         });
       }
@@ -106,15 +107,24 @@ export function MoonCalendar() {
                                 <Moon />
                                 Moon Reading
                             </CardTitle>
-                            <CardDescription>{result.phaseName} for {format(date, 'PPP')}</CardDescription>
+                            <CardDescription>{result.phaseName} in {result.zodiacSign} for {format(date, 'PPP')}</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
+                        <CardContent className="space-y-6">
                             <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Energy & Meaning</h3>
+                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Phase Meaning</h3>
                                 <p className="text-foreground/80">{result.description}</p>
                             </div>
+                             <div>
+                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Stars Reading ({result.zodiacSign})</h3>
+                                <p className="text-foreground/80">{result.starsReading}</p>
+                            </div>
+                            <Separator className="my-4 bg-primary/20" />
                             <div>
-                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Ritual</h3>
+                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Combined Insight</h3>
+                                <p className="text-foreground/80">{result.combinedInsight}</p>
+                            </div>
+                            <div>
+                                <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-1">Suggested Ritual</h3>
                                 <p className="text-foreground/80">{result.ritual}</p>
                             </div>
                             <div>

@@ -9,6 +9,7 @@ import Link from "next/link";
 interface TodaysMoonPhaseCardProps {
     moonPhase: {
         phaseName: string;
+        zodiacSign: string;
         description: string;
     };
 }
@@ -25,7 +26,7 @@ export function TodaysMoonPhaseCard({ moonPhase }: TodaysMoonPhaseCardProps) {
             </CardHeader>
             <CardContent className="space-y-4 text-center">
                 <h3 className="text-xl md:text-2xl font-headline font-semibold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400">
-                    {moonPhase.phaseName}
+                    {moonPhase.phaseName} in {moonPhase.zodiacSign}
                 </h3>
                 <p className="text-foreground/80">{moonPhase.description}</p>
             </CardContent>

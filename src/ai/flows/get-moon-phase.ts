@@ -10,6 +10,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { getMoonZodiacSign } from '@/services/astrology-service';
 import {z} from 'genkit';
 
 const GetMoonPhaseInputSchema = z.object({
@@ -23,15 +24,19 @@ export type GetMoonPhaseInput = z.infer<typeof GetMoonPhaseInputSchema>;
 const GetMoonPhaseInternalInputSchema = z.object({
   date: z.string(),
   phaseName: z.string(),
+  zodiacSign: z.string(),
   isNorthernHemisphere: z.boolean(),
 });
 
 const GetMoonPhaseOutputSchema = z.object({
   imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
   phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
+  zodiacSign: z.string().describe('The zodiac sign the moon is currently in (e.g., "Aries", "Taurus").'),
   description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
-  ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
+  ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere and zodiac sign."),
   affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
+  starsReading: z.string().describe("A 2-3 sentence reading about the influence of the current zodiac sign on the moon's energy."),
+  combinedInsight: z.string().describe("A 2-3 sentence summary that synthesizes the moon phase and the zodiac sign's influence into a single piece of actionable guidance."),
 });
 
 export type GetMoonPhaseOutput = z.infer<typeof GetMoonPhaseOutputSchema>;
@@ -48,6 +53,7 @@ const prompt = ai.definePrompt({
 
   The date is {{{date}}}.
   The calculated moon phase is "{{{phaseName}}}".
+  The moon's zodiac sign is "{{{zodiacSign}}}".
   The user is in the {{#if isNorthernHemisphere}}Northern{{else}}Southern{{/if}} Hemisphere.
   
   **Hemisphere-Specific Guidance is Crucial:**
@@ -56,9 +62,12 @@ const prompt = ai.definePrompt({
 
   Please provide a reading structured as follows:
     -   **phaseName**: Confirm the phase name: "{{{phaseName}}}".
+    -   **zodiacSign**: Confirm the zodiac sign: "{{{zodiacSign}}}".
     -   **description**: A 2-3 sentence spiritual interpretation of the energy of that phase, making sure it is **distinct and appropriate** for the user's hemisphere.
-    -   **ritual**: A simple, actionable ritual suggestion for working with this energy.
-    -   **affirmation**: A short, powerful affirmation that aligns with the phase.
+    -   **starsReading**: A 2-3 sentence reading about the influence of the zodiac sign "{{{zodiacSign}}}" on the moon's energy.
+    -   **ritual**: A simple, actionable ritual suggestion that combines the energies of both the moon phase and the zodiac sign.
+    -   **affirmation**: A short, powerful affirmation that aligns with the combined energy.
+    -   **combinedInsight**: A 2-3 sentence summary synthesizing the moon phase and zodiac sign's influence into a single piece of actionable guidance.
   
   Finally, provide **imageKeywords** for the moon phase (e.g., "full moon", "waning crescent").
   
@@ -84,12 +93,13 @@ const getMoonPhaseFlow = ai.defineFlow(
       "Full Moon", "Waning Gibbous", "Third Quarter", "Waning Crescent"
     ];
     
-    // There are 8 phases, so we multiply by 8 and take the floor.
-    // We add 0.5 and take modulo 8 to center the phases.
     const phaseIndex = Math.floor((phase * 8 + 0.5) % 8);
     const phaseName = phases[phaseIndex];
+    
+    // Get zodiac sign from service
+    const zodiacSign = await getMoonZodiacSign(date);
 
-    const {output} = await prompt({ date: input.date, phaseName, isNorthernHemisphere: input.isNorthernHemisphere });
+    const {output} = await prompt({ date: input.date, phaseName, zodiacSign, isNorthernHemisphere: input.isNorthernHemisphere });
     return output!;
   }
 );
