@@ -9,7 +9,15 @@ import * as ephemeris from 'ephemeris';
  */
 export async function getMoonZodiacSign(date: Date): Promise<ephemeris.ZodiacSign> {
     try {
-        const data: ephemeris.EphemerisData[] = await ephemeris.getPlanets(date, [ephemeris.MOON]);
+        const data: ephemeris.EphemerisData[] = await new Promise((resolve, reject) => {
+            ephemeris.getPlanets(date, [ephemeris.MOON], (err: any, data: any) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            });
+        });
+
         if (data && data.length > 0 && data[0].planets[ephemeris.MOON]) {
             return data[0].planets[ephemeris.MOON].sign;
         }
