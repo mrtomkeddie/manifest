@@ -40,12 +40,12 @@ const mainNav = [
 ];
 
 const memberNav = [
+  { href: '/account', icon: <User />, label: 'My Profile' },
   { href: '/journal', icon: <BookMarked />, label: 'Journal' },
   { href: '/members', icon: <Gem />, label: 'Membership' },
 ];
 
 const footerNav = [
-    { href: '/account', icon: <User />, label: 'My Profile' },
     { href: '/logout', icon: <LogOut />, label: 'Logout' },
 ]
 
