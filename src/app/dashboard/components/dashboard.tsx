@@ -6,6 +6,7 @@ import { TarotCard } from './tarot-card';
 import { TodaysAffirmationCard } from './todays-affirmation-card';
 import { TodaysAngelNumberCard } from './todays-angel-number-card';
 import { getDashboardData } from '@/ai/flows/get-dashboard-data';
+import { TodaysHoroscopeCard } from './todays-horoscope-card';
 
 export async function Dashboard() {
   const dashboardData = await getDashboardData({ date: format(new Date(), 'yyyy-MM-dd'), isNorthernHemisphere: true });
@@ -22,6 +23,9 @@ export async function Dashboard() {
       <TodaysAngelNumberCard number={dashboardData.angelNumber.number} meaning={dashboardData.angelNumber.meaning} />
       <div className="lg:col-span-2">
         <TodaysAffirmationCard affirmation={dashboardData.affirmation.affirmation} />
+      </div>
+       <div className="lg:col-span-2">
+        <TodaysHoroscopeCard />
       </div>
     </div>
   );
