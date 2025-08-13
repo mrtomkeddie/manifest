@@ -21,7 +21,7 @@ const DrawTarotCardInputSchema = z.object({
 const DrawTarotCardOutputSchema = z.object({
   cardName: z.string().describe('The name of the tarot card provided.'),
   orientation: z.string().describe('The orientation of the card provided.'),
-  meaning: z.string().describe("A 2-3 sentence interpretation of the provided card meaning in its specific orientation. Use the custom suit names (Flames, Chalices, Blades, Coins)."),
+  meaning: z.string().describe("A 2-3 sentence interpretation of the provided card meaning in its specific orientation."),
   affirmation: z.string().describe('A short, powerful affirmation related to the card\'s meaning.'),
   imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
   image: z.string().describe('The path to the image for the card.'),
@@ -56,8 +56,6 @@ const prompt = ai.definePrompt({
   prompt: `You are a mystical tarot reader. A user has drawn their daily card. 
   
   The card is the **{{{cardName}}} ({{{orientation}}})**.
-
-  This reading uses a custom deck with unique suit names: Flames (Wands), Chalices (Cups), Blades (Swords), and Coins (Pentacles). Please incorporate these specific suit names in your interpretations where appropriate.
 
   The core meaning is: "{{{meaning}}}"
 
