@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -46,10 +47,12 @@ export async function drawTarotCard(): Promise<DrawTarotCardOutput> {
     return { ...result, imageKeywords: card.imageKeywords, image: card.image };
 }
 
+const PromptOutputSchema = DrawTarotCardOutputSchema.omit({ image: true, imageKeywords: true });
+
 const prompt = ai.definePrompt({
   name: 'drawTarotCardPrompt',
   input: {schema: DrawTarotCardInputSchema},
-  output: {schema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords", "image")},
+  output: {schema: PromptOutputSchema},
   prompt: `You are a mystical tarot reader. A user has drawn their daily card. 
   
   The card is the **{{{cardName}}} ({{{orientation}}})**.
@@ -67,7 +70,7 @@ const drawTarotCardFlow = ai.defineFlow(
   {
     name: 'drawTarotCardFlow',
     inputSchema: DrawTarotCardInputSchema,
-    outputSchema: Omit(DrawTarotCardOutputSchema.shape, "imageKeywords", "image"),
+    outputSchema: PromptOutputSchema,
   },
   async (input) => {
     const {output} = await prompt(input);

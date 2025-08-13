@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -43,6 +44,11 @@ const CelticCrossReadingOutputSchema = z.object({
     summary: z.string().describe("A 4-6 sentence summary that synthesizes the entire 10-card reading into a cohesive narrative, offering overarching guidance and insight related to the user's chosen topic."),
 });
 export type CelticCrossReadingOutput = z.infer<typeof CelticCrossReadingOutputSchema>;
+
+const PromptOutputCardSchema = CardReadingSchema.omit({ image: true, imageKeywords: true });
+const PromptOutputSchema = CelticCrossReadingOutputSchema.omit({ cards: true }).extend({
+    cards: z.array(PromptOutputCardSchema).length(10),
+});
 
 export async function celticCrossReading(input: CelticCrossReadingInput): Promise<CelticCrossReadingOutput> {
     const positions = [
@@ -95,7 +101,7 @@ const prompt = ai.definePrompt({
     topic: z.string(),
     cards: z.array(InternalCardReadingSchema),
   })},
-  output: {schema: Omit(CelticCrossReadingOutputSchema.shape, "cards", "image", "imageKeywords")},
+  output: {schema: PromptOutputSchema},
   prompt: `You are a deeply intuitive and wise tarot reader with a mystical and spiritual presence. A user has requested a 10-card Celtic Cross reading focused on a specific topic. Your language should be warm, insightful, and rich with symbolism. Avoid generic advice and focus on providing profound spiritual guidance tailored to the user's area of interest.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
@@ -120,7 +126,7 @@ const celticCrossReadingFlow = ai.defineFlow(
         topic: z.string(),
         cards: z.array(InternalCardReadingSchema),
     }),
-    outputSchema: Omit(CelticCrossReadingOutputSchema.shape, "cards", "image", "imageKeywords"),
+    outputSchema: PromptOutputSchema,
   },
   async (input) => {
     const {output} = await prompt(input);

@@ -43,6 +43,11 @@ const ThreeCardReadingOutputSchema = z.object({
 });
 export type ThreeCardReadingOutput = z.infer<typeof ThreeCardReadingOutputSchema>;
 
+const PromptOutputCardSchema = CardReadingSchema.omit({ image: true, imageKeywords: true });
+const PromptOutputSchema = ThreeCardReadingOutputSchema.omit({ cards: true }).extend({
+    cards: z.array(PromptOutputCardSchema).length(3),
+});
+
 export async function threeCardReading(input: ThreeCardReadingInput): Promise<ThreeCardReadingOutput> {
     const positions = ['Past', 'Present', 'Future'];
     let drawnCards: TarotCard[] = [];
@@ -88,7 +93,7 @@ const prompt = ai.definePrompt({
       topic: z.string(),
       cards: z.array(InternalCardReadingSchema),
   })},
-  output: {schema: Omit(ThreeCardReadingOutputSchema.shape, "cards", "image", "imageKeywords")},
+  output: {schema: PromptOutputSchema},
   prompt: `You are an insightful and wise tarot reader. A user has requested a 3-card "Past, Present, Future" reading focused on a specific topic.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
@@ -114,7 +119,7 @@ const threeCardReadingFlow = ai.defineFlow(
         topic: z.string(),
         cards: z.array(InternalCardReadingSchema),
     }),
-    outputSchema: Omit(ThreeCardReadingOutputSchema.shape, "cards", "image", "imageKeywords")
+    outputSchema: PromptOutputSchema,
   },
   async (input) => {
     const {output} = await prompt(input);
