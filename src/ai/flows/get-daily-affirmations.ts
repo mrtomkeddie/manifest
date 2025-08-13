@@ -26,6 +26,18 @@ const DailyAffirmationsOutputSchema = z.object({
 });
 export type DailyAffirmationsOutput = z.infer<typeof DailyAffirmationsOutputSchema>;
 
+const fallbackAffirmations: DailyAffirmationsOutput = {
+    affirmations: [
+        { category: 'Love', affirmation: "I am open to receiving and giving love.", usageTip: "Think of someone you love and send them this positive energy." },
+        { category: 'Confidence', affirmation: "I am confident in my abilities and decisions.", usageTip: "Stand tall and repeat this to yourself before a challenging task." },
+        { category: 'Abundance', affirmation: "I attract abundance and prosperity into my life.", usageTip: "Visualize your goals as already achieved." },
+        { category: 'Calm', affirmation: "I am calm, centered, and at peace.", usageTip: "Take three deep breaths, repeating this with each exhale." },
+        { category: 'Health', affirmation: "I am grateful for my body and its vitality.", usageTip: "Do a gentle stretch while focusing on this thought." },
+        { category: 'Success', affirmation: "I am worthy of success and achieve my goals.", usageTip: "Write down one small step you can take towards a goal today." },
+    ]
+};
+
+
 // Caching logic
 let affirmationsCache: { date: string; data: DailyAffirmationsOutput | null } = {
   date: '',
@@ -70,7 +82,15 @@ const getDailyAffirmationsFlow = ai.defineFlow(
     outputSchema: DailyAffirmationsOutputSchema,
   },
   async () => {
-    const {output} = await prompt({ categories: affirmationCategories });
-    return output!;
+    try {
+        const {output} = await prompt({ categories: affirmationCategories });
+        if (!output) {
+            throw new Error("AI output was null or undefined.");
+        }
+        return output;
+    } catch (error) {
+        console.error("AI call for daily affirmations failed, returning fallback data.", error);
+        return fallbackAffirmations;
+    }
   }
 );
