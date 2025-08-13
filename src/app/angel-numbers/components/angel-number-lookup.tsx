@@ -2,7 +2,6 @@
 'use client';
 import { useState, useTransition } from 'react';
 import { getAngelNumberMeaning, type AngelNumberOutput } from '@/ai/flows/get-angel-number-meaning';
-import { getDailyAngelNumber } from '@/ai/flows/get-daily-angel-number';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -46,25 +45,6 @@ export function AngelNumberLookup() {
     });
   };
 
-  const handleGenerateDailyNumber = () => {
-    startTransition(async () => {
-        setResult(null);
-        setNumber(''); // Clear input field
-        try {
-            const { number: dailyNumber } = await getDailyAngelNumber();
-            setNumber(dailyNumber);
-            handleLookup(dailyNumber);
-        } catch (e) {
-            console.error(e);
-            toast({
-                title: 'Error',
-                description: 'Could not generate a daily number. Please try again later.',
-                variant: 'destructive',
-            });
-        }
-    });
-  }
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       handleLookup(number);
@@ -105,10 +85,6 @@ export function AngelNumberLookup() {
                     )}
                     {isPending ? 'Searching...' : 'Find Meaning'}
                 </Button>
-                <Button onClick={handleGenerateDailyNumber} disabled={isPending} variant="outline" className="h-12 text-base w-full md:w-auto">
-                    <Wand2 className="mr-2 h-5 w-5" />
-                    Get Today's Number
-                </Button>
             </div>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center w-full gap-4">
@@ -138,7 +114,7 @@ export function AngelNumberLookup() {
                 <div className="flex flex-col items-center justify-center w-full text-center text-foreground/60 p-6 gap-4">
                     <div className="py-12">
                         <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary/50" />
-                        <p>The universe's guidance will appear here.</p>
+                        <p>Enter a number to find its meaning.</p>
                     </div>
                 </div>
             )}

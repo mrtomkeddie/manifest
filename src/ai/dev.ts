@@ -14,3 +14,4 @@ import '@/ai/flows/three-card-reading.ts';
 import '@/ai/flows/get-daily-horoscope.ts';
 import '@/ai/flows/get-dashboard-data.ts';
 import '@/ai/flows/get-daily-affirmations.ts';
+import '@/ai/flows/get-daily-angel-number-readings.ts';
