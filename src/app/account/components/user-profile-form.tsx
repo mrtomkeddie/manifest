@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -18,11 +18,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { CalendarIcon, Save } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
-import { format } from 'date-fns';
+import { Save } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -35,6 +32,11 @@ export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const defaultValues: Partial<ProfileFormValues> = {};
 
+const years = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i);
+const months = Array.from({ length: 12 }, (_, i) => ({ value: i, label: new Date(0, i).toLocaleString('default', { month: 'long' }) }));
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+
 export function UserProfileForm() {
   const { toast } = useToast();
   const form = useForm<ProfileFormValues>({
@@ -42,13 +44,14 @@ export function UserProfileForm() {
     defaultValues,
     mode: 'onChange',
   });
+  
+  const birthDateValue = form.watch('birthDate');
 
   useEffect(() => {
     try {
         const storedProfile = localStorage.getItem('userProfile');
         if (storedProfile) {
             const parsedProfile = JSON.parse(storedProfile);
-            // Zod expects a Date object, so we need to convert the string back
             if(parsedProfile.birthDate) {
                 parsedProfile.birthDate = new Date(parsedProfile.birthDate);
             }
@@ -65,6 +68,15 @@ export function UserProfileForm() {
       title: 'Profile Saved',
       description: 'Your cosmic profile has been saved successfully.',
     });
+  }
+  
+  const handleDateChange = (part: 'day' | 'month' | 'year', value: string) => {
+    const current_date = form.getValues('birthDate') || new Date();
+    const newDate = new Date(current_date);
+    if(part === 'day') newDate.setDate(parseInt(value));
+    if(part === 'month') newDate.setMonth(parseInt(value));
+    if(part === 'year') newDate.setFullYear(parseInt(value));
+    form.setValue('birthDate', newDate, { shouldValidate: true, shouldDirty: true });
   }
 
   return (
@@ -88,50 +100,50 @@ export function UserProfileForm() {
                             </FormItem>
                         )}
                     />
+                    
                     <FormField
                         control={form.control}
                         name="birthDate"
                         render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                            <FormLabel>Date of Birth</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                <FormControl>
-                                    <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                        "w-full pl-3 text-left font-normal",
-                                        !field.value && "text-muted-foreground"
-                                    )}
+                           <FormItem>
+                                <FormLabel>Date of Birth</FormLabel>
+                                <div className="flex gap-4">
+                                     <Select
+                                        value={birthDateValue ? String(birthDateValue.getFullYear()) : ''}
+                                        onValueChange={(val) => handleDateChange('year', val)}
+                                        disabled={field.disabled}
                                     >
-                                    {field.value ? (
-                                        format(field.value, "PPP")
-                                    ) : (
-                                        <span>Pick a date</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                    </Button>
-                                </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    mode="single"
-                                    captionLayout="dropdown-buttons"
-                                    fromYear={1924}
-                                    toYear={new Date().getFullYear()}
-                                    selected={field.value}
-                                    onSelect={field.onChange}
-                                    disabled={(date) =>
-                                        date > new Date() || date < new Date("1924-01-01")
-                                    }
-                                    initialFocus
-                                />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                            </FormItem>
+                                        <SelectTrigger><SelectValue placeholder="Year" /></SelectTrigger>
+                                        <SelectContent>
+                                            {years.map(year => <SelectItem key={year} value={String(year)}>{year}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                    <Select
+                                        value={birthDateValue ? String(birthDateValue.getMonth()) : ''}
+                                        onValueChange={(val) => handleDateChange('month', val)}
+                                        disabled={field.disabled}
+                                    >
+                                        <SelectTrigger><SelectValue placeholder="Month" /></SelectTrigger>
+                                        <SelectContent>
+                                            {months.map(month => <SelectItem key={month.value} value={String(month.value)}>{month.label}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                     <Select
+                                        value={birthDateValue ? String(birthDateValue.getDate()) : ''}
+                                        onValueChange={(val) => handleDateChange('day', val)}
+                                        disabled={field.disabled}
+                                    >
+                                        <SelectTrigger><SelectValue placeholder="Day" /></SelectTrigger>
+                                        <SelectContent>
+                                            {days.map(day => <SelectItem key={day} value={String(day)}>{day}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <FormMessage />
+                           </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="birthTime"
