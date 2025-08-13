@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -83,7 +84,7 @@ export default function Home() {
         <div className="container mx-auto flex justify-between items-center">
           <Logo />
           <Button variant="ghost" asChild>
-            <Link href="/affirmations">Enter App</Link>
+            <Link href="/daily-reading">Enter App</Link>
           </Button>
         </div>
       </header>
