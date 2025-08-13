@@ -2,19 +2,17 @@
 'use client';
 import { useState, useTransition, useEffect } from 'react';
 import { getDailyHoroscope, type GetDailyHoroscopeOutput } from '@/ai/flows/get-daily-horoscope';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Wand2, Sun, Sparkles } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Loader2, Sun, Sparkles } from 'lucide-react';
 
 const zodiacSigns = [
     'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
     'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
 ];
 
-export function TodaysHoroscopeCard() {
+export function HoroscopeDisplay() {
   const [sign, setSign] = useState('');
   const [result, setResult] = useState<GetDailyHoroscopeOutput | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -48,13 +46,13 @@ export function TodaysHoroscopeCard() {
   }, [sign]);
 
   return (
-    <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
+    <Card className="w-full max-w-2xl mx-auto bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
         <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-headline text-2xl text-primary">
-                <Sun />
-                Today's Horoscope
-            </CardTitle>
-             <div className="flex flex-col md:flex-row gap-4 pt-2">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+                <CardTitle className="flex items-center gap-2 font-headline text-2xl text-primary">
+                    <Sun />
+                    Today's Horoscope
+                </CardTitle>
                 <Select value={sign} onValueChange={setSign} disabled={isPending}>
                     <SelectTrigger className="w-full md:w-[240px] h-11 text-base">
                         <SelectValue placeholder="Select your sign..." />
@@ -70,7 +68,7 @@ export function TodaysHoroscopeCard() {
             </div>
         </CardHeader>
         
-        <CardContent className="min-h-[120px] flex items-center justify-center">
+        <CardContent className="min-h-[150px] flex items-center justify-center">
             {isPending && (
                 <div className="flex items-center gap-4 text-foreground/70">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -79,7 +77,7 @@ export function TodaysHoroscopeCard() {
             )}
             {!isPending && result && (
                 <div className="text-base text-foreground/90 animate-in fade-in duration-500 w-full">
-                     <p>{result.horoscope}</p>
+                     <p className="text-lg leading-relaxed">{result.horoscope}</p>
                 </div>
             )}
              {!isPending && !result && (

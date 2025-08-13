@@ -6,7 +6,7 @@ import { getMoonPhase, type GetMoonPhaseOutput } from '@/ai/flows/get-moon-phase
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Moon, Sparkles, Wand2, Star } from 'lucide-react';
+import { Loader2, Moon, Wand2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -42,7 +42,6 @@ export function MoonCalendar() {
     });
   };
   
-  // Fetch reading for the initial date on component mount
   useEffect(() => {
     handleGetReading();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,7 +104,6 @@ export function MoonCalendar() {
             {!isPending && result && date && (
                 <div className="w-full space-y-8 text-foreground/90 animate-in fade-in duration-500">
                     
-                    {/* Moon Reading */}
                     <Card className="w-full bg-card/50 border-primary/10 shadow-lg shadow-primary/5">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-2xl font-headline text-primary">
@@ -144,7 +142,7 @@ export function MoonCalendar() {
             )}
 
             {!isPending && !result && (
-                <div className="text-center text-foreground/60 min-h-[300px] flex flex-col justify-content items-center">
+                <div className="text-center text-foreground/60 min-h-[300px] flex flex-col justify-center items-center">
                     <Moon className="w-16 h-16 mx-auto mb-4 text-primary/50" />
                     <h2 className="text-2xl font-headline">Select a date</h2>
                     <p>Choose a date and your hemisphere to reveal the cosmic guidance.</p>

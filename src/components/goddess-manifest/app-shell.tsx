@@ -16,8 +16,6 @@ import {
   Moon,
   Gem,
   BookMarked,
-  Download,
-  Calendar,
   User,
   LogOut,
   Star,
@@ -38,6 +36,7 @@ const mainNav = [
   { href: '/affirmations', icon: <Wand2 />, label: 'Affirmations' },
   { href: '/angel-numbers', icon: <Star />, label: 'Angel Numbers' },
   { href: '/moon', icon: <Moon />, label: 'Moon Calendar' },
+  { href: '/astrology', icon: <Sun />, label: 'Astrology' },
 ];
 
 const memberNav = [
