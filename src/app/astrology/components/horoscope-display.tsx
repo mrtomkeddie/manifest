@@ -26,28 +26,29 @@ export function HoroscopeDisplay() {
     const fetchNatalChart = async () => {
         setIsLoading(true);
         setIsProfileMissing(false);
+        setChartData(null);
         try {
             const storedProfile = localStorage.getItem('userProfile');
             if (!storedProfile) {
                 setIsProfileMissing(true);
+                setIsLoading(false);
                 return;
             }
             
             const profile: ProfileFormValues = JSON.parse(storedProfile);
             if (!profile.birthDate) {
-                 setIsProfileMissing(true);
+                setIsProfileMissing(true);
+                setIsLoading(false);
                 return;
             }
 
             const birthDate = new Date(profile.birthDate);
 
-            // Calculate signs
-            const [sunSign, moonSign] = await Promise.all([
-                getSunSign(birthDate),
-                getMoonZodiacSign(birthDate),
-            ]);
+            // Calculate signs first
+            const sunSign = await getSunSign(birthDate);
+            const moonSign = await getMoonZodiacSign(birthDate);
             
-            // Get AI interpretation
+            // Then, start the AI transition
             startTransition(async () => {
                 try {
                     const reading = await getNatalChartReading({ sunSign, moonSign });
