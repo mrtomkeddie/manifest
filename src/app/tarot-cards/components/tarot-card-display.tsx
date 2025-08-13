@@ -104,8 +104,7 @@ export function TarotCardDisplay() {
                            <div className="md:flex md:flex-row gap-6 p-4">
                                 <div className="md:w-1/4 flex items-center justify-center mb-4 md:mb-0">
                                     <Image
-                                        src={`https://placehold.co/400x600.png`}
-                                        data-ai-hint={card.imageKeywords}
+                                        src={card.image}
                                         alt={card.cardName}
                                         width={200}
                                         height={300}

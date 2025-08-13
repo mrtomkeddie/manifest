@@ -25,7 +25,7 @@ const CardReadingSchema = z.object({
     positionName: z.string().describe("The name of the position in the spread (Past, Present, Future)."),
     cardName: z.string().describe('The name of the tarot card (e.g., "The Fool").'),
     orientation: z.string().describe('The orientation of the card, either "upright" or "reversed".'),
-    meaning: z.string().describe("A 2-3 sentence mystical interpretation of the card in its specific position within the spread, tailored to the user's chosen topic."),
+    meaning: z.string().describe("A 2-3 sentence mystical interpretation of the card in its specific position within the spread, tailored to the user's chosen topic and using the custom suit names (Flames, Chalices, Blades, Coins)."),
     imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
     image: z.string().describe('The path to the image for the card.'),
 });
@@ -95,6 +95,8 @@ const prompt = ai.definePrompt({
   })},
   output: {schema: PromptOutputSchema},
   prompt: `You are an insightful and wise tarot reader. A user has requested a 3-card "Past, Present, Future" reading focused on a specific topic.
+
+  This reading uses a custom deck with unique suit names: Flames (Wands), Chalices (Cups), Blades (Swords), and Coins (Pentacles). Please incorporate these specific suit names in your interpretations where appropriate.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
 

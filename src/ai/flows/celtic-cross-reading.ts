@@ -26,7 +26,7 @@ const CardReadingSchema = z.object({
     positionNumber: z.number().describe("The number of the position (1-10)."),
     cardName: z.string().describe('The name of the tarot card (e.g., "The Fool").'),
     orientation: z.string().describe('The orientation of the card, either "upright" or "reversed".'),
-    meaning: z.string().describe("A 2-4 sentence mystical interpretation of the card in its specific position within the spread, weaving in symbolism and spiritual insight. The interpretation should be tailored to the user's chosen topic."),
+    meaning: z.string().describe("A 2-4 sentence mystical interpretation of the card in its specific position within the spread, weaving in symbolism and spiritual insight. The interpretation should be tailored to the user's chosen topic and use the custom suit names (Flames, Chalices, Blades, Coins)."),
     imageKeywords: z.string().describe('One or two keywords for generating an image of the card, like "tarot sun" or "tarot fool".'),
     image: z.string().describe('The path to the image for the card.'),
 });
@@ -103,6 +103,8 @@ const prompt = ai.definePrompt({
   })},
   output: {schema: PromptOutputSchema},
   prompt: `You are a deeply intuitive and wise tarot reader with a mystical and spiritual presence. A user has requested a 10-card Celtic Cross reading focused on a specific topic. Your language should be warm, insightful, and rich with symbolism. Avoid generic advice and focus on providing profound spiritual guidance tailored to the user's area of interest.
+
+  This reading uses a custom deck with unique suit names: Flames (Wands), Chalices (Cups), Blades (Swords), and Coins (Pentacles). Please incorporate these specific suit names in your interpretations where appropriate.
 
   The user's chosen topic is: **{{{topic}}}**. All interpretations must be framed within this context.
 
