@@ -120,7 +120,7 @@ const getDashboardDataFlow = ai.defineFlow(
         console.error("Failed to generate affirmation:", e);
         return { affirmation: "I am open to the universe's guidance.", usageTip: "Breathe deeply and trust your path." };
       }),
-      getDailyAngelNumber().catch((e) => { // This now uses the local function, but we'll keep the fallback.
+      getDailyAngelNumber().catch((e) => {
         console.error("Failed to get daily angel number, using fallback.", e);
         return { number: "111" };
       }),
@@ -143,7 +143,7 @@ const getDashboardDataFlow = ai.defineFlow(
     ]);
     
     // Get angel number meaning, now with a guaranteed number
-    const { readings } = await getAngelNumberMeaning({ number: angelNumberResult.number, topics: ['General'] }).catch((e) => {
+    const angelNumberMeaningResult = await getAngelNumberMeaning({ number: angelNumberResult.number, topics: ['General'] }).catch((e) => {
         console.error("Failed to get angel number meaning, using fallback.", e);
         return { readings: [{
             topic: 'General',
@@ -166,7 +166,7 @@ const getDashboardDataFlow = ai.defineFlow(
       affirmation: affirmationResult,
       angelNumber: {
         number: angelNumberResult.number,
-        meaning: readings[0],
+        meaning: angelNumberMeaningResult.readings[0],
       },
       moonPhase: {
         phaseName: moonPhaseResult.phaseName,
@@ -178,3 +178,5 @@ const getDashboardDataFlow = ai.defineFlow(
     };
   }
 );
+
+    
