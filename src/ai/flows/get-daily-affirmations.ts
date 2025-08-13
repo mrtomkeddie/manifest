@@ -52,13 +52,18 @@ export async function getDailyAffirmations(): Promise<DailyAffirmationsOutput> {
     return affirmationsCache.data;
   }
   
-  console.log('Generating new daily affirmations for', today);
-  const newData = await getDailyAffirmationsFlow();
-  affirmationsCache = {
-    date: today,
-    data: newData,
-  };
-  return newData;
+  try {
+    console.log('Generating new daily affirmations for', today);
+    const newData = await getDailyAffirmationsFlow();
+    affirmationsCache = {
+        date: today,
+        data: newData,
+    };
+    return newData;
+  } catch (error) {
+    console.error("Failed to generate new daily affirmations, returning fallback.", error);
+    return fallbackAffirmations;
+  }
 }
 
 
@@ -82,15 +87,11 @@ const getDailyAffirmationsFlow = ai.defineFlow(
     outputSchema: DailyAffirmationsOutputSchema,
   },
   async () => {
-    try {
-        const {output} = await prompt({ categories: affirmationCategories });
-        if (!output) {
-            throw new Error("AI output was null or undefined.");
-        }
-        return output;
-    } catch (error) {
-        console.error("AI call for daily affirmations failed, returning fallback data.", error);
-        return fallbackAffirmations;
+    const {output} = await prompt({ categories: affirmationCategories });
+    if (!output || !output.affirmations || output.affirmations.length !== affirmationCategories.length) {
+        console.error("AI output for daily affirmations was null, undefined, or incomplete.");
+        throw new Error("Invalid AI output.");
     }
+    return output;
   }
 );

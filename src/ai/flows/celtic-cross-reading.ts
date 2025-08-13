@@ -129,7 +129,25 @@ const celticCrossReadingFlow = ai.defineFlow(
     outputSchema: PromptOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+        const {output} = await prompt(input);
+        if (!output) {
+            throw new Error("AI output was null or undefined.");
+        }
+        return output;
+    } catch (error) {
+        console.error("AI call for Celtic Cross reading failed.", error);
+        // Fallback in case of error
+        return {
+            cards: input.cards.map(card => ({
+                positionName: card.positionName,
+                positionNumber: card.positionNumber,
+                cardName: card.cardName,
+                orientation: card.orientation,
+                meaning: "The spiritual energies are currently clouded. Please take a moment of reflection and try your reading again shortly.",
+            })),
+            summary: "The cards are veiled at this moment. The universe advises a period of quiet contemplation before seeking further guidance. Trust that clarity will come when the time is right."
+        };
+    }
   }
 );

@@ -99,7 +99,25 @@ const getMoonPhaseFlow = ai.defineFlow(
     // Get zodiac sign from service
     const zodiacSign = await getMoonZodiacSign(date);
 
-    const {output} = await prompt({ date: input.date, phaseName, zodiacSign, isNorthernHemisphere: input.isNorthernHemisphere });
-    return output!;
+    try {
+        const {output} = await prompt({ date: input.date, phaseName, zodiacSign, isNorthernHemisphere: input.isNorthernHemisphere });
+        if (!output) {
+            throw new Error("AI output was null or undefined.");
+        }
+        return output;
+    } catch (error) {
+        console.error("AI call for moon phase failed.", error);
+        // Fallback in case of error
+        return {
+            phaseName: phaseName,
+            zodiacSign: zodiacSign,
+            description: "The cosmic energies are currently veiled. Take a moment for quiet reflection. Your intuition knows the way.",
+            ritual: "Light a candle and sit in silence for a few minutes. Focus on your breath and allow your mind to clear. Your inner wisdom will guide you.",
+            affirmation: "I am connected to the quiet wisdom of the universe.",
+            starsReading: `The moon in ${zodiacSign} encourages a gentle approach today. Listen more than you speak.`,
+            combinedInsight: "Today is a day for stillness, not action. The universe invites you to rest and recharge your spiritual batteries. Clarity will come soon.",
+            imageKeywords: "night sky stars"
+        };
+    }
   }
 );
