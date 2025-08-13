@@ -107,7 +107,7 @@ const getDashboardDataFlow = ai.defineFlow(
     const [
       dailyReadingResult,
       affirmationResult,
-      angelNumberResult,
+      angelNumber,
       moonPhaseResult,
       tarotMeaningResult,
     ] = await Promise.all([
@@ -119,9 +119,9 @@ const getDashboardDataFlow = ai.defineFlow(
         console.error("Failed to generate affirmation:", e);
         return { affirmation: "I am open to the universe's guidance.", usageTip: "Breathe deeply and trust your path." };
       }),
-      getDailyAngelNumber().then(num => getAngelNumberMeaning({ number: num.number, topic: 'General' })).catch((e) => {
-          console.error("Failed to get angel number:", e);
-          return { number: "111", meaning: { meaning: "A sign of new beginnings and alignment. The universe is listening.", affirmation: "I am aligned with my highest purpose." } };
+      getDailyAngelNumber().catch((e) => {
+        console.error("Failed to get daily angel number, using fallback.", e);
+        return { number: "111" };
       }),
       getMoonPhase(input).catch((e) => {
         console.error("Failed to get moon phase:", e);
@@ -141,8 +141,11 @@ const getDashboardDataFlow = ai.defineFlow(
       }),
     ]);
     
-    // Combine results into the final output shape.
-    const angelNumberData = 'number' in angelNumberResult ? angelNumberResult : { number: "111", meaning: angelNumberResult };
+    // Get angel number meaning, now with a guaranteed number
+    const angelNumberMeaning = await getAngelNumberMeaning({ number: angelNumber.number, topic: 'General' }).catch((e) => {
+        console.error("Failed to get angel number meaning, using fallback.", e);
+        return { meaning: "A sign of new beginnings and alignment. The universe is listening.", affirmation: "I am aligned with my highest purpose." };
+    });
 
     const tarotOutput: GetDashboardDataOutput['tarotCard'] = {
         cardName: card.name,
@@ -156,7 +159,10 @@ const getDashboardDataFlow = ai.defineFlow(
     return {
       dailyReading: dailyReadingResult,
       affirmation: affirmationResult,
-      angelNumber: angelNumberData,
+      angelNumber: {
+        number: angelNumber.number,
+        meaning: angelNumberMeaning,
+      },
       moonPhase: {
         phaseName: moonPhaseResult.phaseName,
         zodiacSign: moonPhaseResult.zodiacSign,
