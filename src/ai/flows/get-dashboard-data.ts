@@ -92,6 +92,20 @@ export async function getDashboardData(input: GetDashboardDataInput): Promise<Ge
   return newData;
 }
 
+const tarotPrompt = ai.definePrompt({
+    name: 'dashboardTarotPrompt',
+    model: 'googleai/gemini-1.5-flash-latest',
+    input: { schema: z.object({ cardName: z.string(), orientation: z.string(), meaning: z.string() }) },
+    output: { schema: z.object({ meaning: z.string(), affirmation: z.string() }) },
+    prompt: `You are a mystical tarot reader. Interpret the card **{{{cardName}}} ({{{orientation}}})** which has the core meaning: "{{{meaning}}}".
+          
+          You must provide:
+          1.  A 2-3 sentence interpretation for a daily reading.
+          2.  A powerful, short affirmation.
+          
+          Return ONLY the JSON object with 'meaning' and 'affirmation' fields. Do not add any conversational text or markdown.`,
+});
+
 
 const getDashboardDataFlow = ai.defineFlow(
   {
@@ -129,21 +143,10 @@ const getDashboardDataFlow = ai.defineFlow(
         console.error("Failed to get moon phase:", e);
         return { phaseName: "Celestial Haze", zodiacSign: "Mystery", description: "The celestial energies are swirling today. It's a good day for introspection.", imageKeywords: "night sky", ritual: "", affirmation: "", starsReading: "", combinedInsight: "" };
       }),
-      ai.generate({
-          model: 'googleai/gemini-1.5-flash-latest',
-          prompt: `You are a mystical tarot reader. Interpret the card **${card.name} (${orientation})** which has the core meaning: "${meaning}".
-          
-          You must provide:
-          1.  A 2-3 sentence interpretation for a daily reading.
-          2.  A powerful, short affirmation.
-          
-          Return ONLY the JSON object with 'meaning' and 'affirmation' fields. Do not add any conversational text or markdown.`,
-          output: {
-              schema: z.object({
-                  meaning: z.string(),
-                  affirmation: z.string(),
-              }),
-          }
+      tarotPrompt({
+        cardName: card.name,
+        orientation: orientation,
+        meaning: meaning
       }).then(res => res.output!).catch((e) => {
         console.error("Failed to get tarot meaning:", e);
         return { meaning: "The cards are veiled today, suggesting a time for quiet contemplation rather than action.", affirmation: "I trust in the unfolding of my journey." };
