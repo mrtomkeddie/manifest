@@ -1,6 +1,6 @@
 
 'use server';
-import { EphemerisApi, MOON, type ZodiacSign, type EphemerisData } from 'ephemeris';
+import { getPlanets, MOON, type ZodiacSign, type EphemerisData } from 'ephemeris';
 
 /**
  * Gets the Zodiac sign for the Moon on a given date.
@@ -9,7 +9,7 @@ import { EphemerisApi, MOON, type ZodiacSign, type EphemerisData } from 'ephemer
  */
 export async function getMoonZodiacSign(date: Date): Promise<ZodiacSign> {
     try {
-        const data: EphemerisData[] = await EphemerisApi.getPlanets(date, [MOON]);
+        const data: EphemerisData[] = await getPlanets(date, [MOON]);
         if (data && data.length > 0 && data[0].planets[MOON]) {
             return data[0].planets[MOON].sign;
         }
