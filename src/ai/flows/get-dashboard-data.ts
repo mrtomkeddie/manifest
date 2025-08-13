@@ -120,9 +120,10 @@ Please generate:
 2.  **A Daily Affirmation:** Generate an affirmation for 'confidence' along with a usage tip.
 3.  **A Daily Angel Number:** Provide a common angel number, its general spiritual meaning, and a related affirmation.
 4.  **A Moon & Stars Reading:**
-    -   The moon phase for the given date is "{{{phaseName}}}".
+    -   First, determine the moon's zodiac sign for the given date: {{{date}}}.
+    -   The calculated moon phase is "{{{phaseName}}}".
     -   Provide a hemisphere-specific interpretation, ritual, and affirmation for this moon phase.
-    -   Determine the moon's zodiac sign and any major aspects for the date.
+    -   Based on the determined zodiac sign, provide the moon's sign and any major aspects for the date.
     -   Provide an interpretation of the astrological influence and a practical tip.
     -   Combine the moon and stars into a single, actionable insight.
     -   Provide image keywords for the moon phase.
@@ -181,8 +182,8 @@ const getDashboardDataFlow = ai.defineFlow(
     const tarotOutput: GetDashboardDataOutput['tarotCard'] = {
         cardName: card.name,
         orientation: orientation,
-        meaning: tarotResult.output.meaning,
-        affirmation: tarotResult.output.affirmation,
+        meaning: tarotResult.output!.meaning,
+        affirmation: tarotResult.output!.affirmation,
         imageKeywords: card.imageKeywords,
         image: card.image,
     };

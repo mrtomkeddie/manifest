@@ -72,7 +72,7 @@ const prompt = ai.definePrompt({
     -   **affirmation**: A short, powerful affirmation that aligns with the phase.
 
   **2. Stars Reading:** (Focus only on the Astrology for the given date)
-    -   **signAndAspects**: Determine the moon's zodiac sign and any major planetary aspects for the given date (e.g., "Moon in Capricorn", "Moon in Aquarius square Uranus").
+    -   **signAndAspects**: First, determine the moon's zodiac sign for the given date: {{{date}}}. Then, state the moon's zodiac sign and any major planetary aspects (e.g., "Moon in Capricorn", "Moon in Aquarius square Uranus").
     -   **influence**: Explain how this astrological energy affects emotions, creativity, communication, or manifestation in 2-3 sentences.
     -   **practicalTip**: Provide a practical 1-2 sentence tip based on the day's astrological influence.
 
