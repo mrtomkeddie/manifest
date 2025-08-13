@@ -1,7 +1,7 @@
 'use server';
 
 import { genkit } from 'genkit';
-import openAI, { GenerationCommonConfigSchema } from '@genkit-ai/compat-oai';
+import openAI from '@genkit-ai/compat-oai';
 import { ModelInfo } from 'genkit/model';
 import { z } from 'genkit';
 
@@ -16,19 +16,14 @@ const reasonerInfo: ModelInfo = {
   supports: { multiturn: true, tools: true, media: false, systemRole: true, output: ['text', 'json'] },
 };
 
-// 2) Optional per-model config schema (use if you need extra params later)
-const schema = GenerationCommonConfigSchema.extend({
-  // Add DeepSeek-specific toggles if you plan to use them
-});
-
 export const ai = genkit({
   plugins: [
     openAI({
       apiKey: process.env.DEEPSEEK_API_KEY!,
       baseURL: process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com',
       models: [
-        { name: 'deepseek-chat', info: chatInfo, configSchema: schema },
-        { name: 'deepseek-reasoner', info: reasonerInfo, configSchema: schema },
+        { name: 'deepseek-chat', info: chatInfo },
+        { name: 'deepseek-reasoner', info: reasonerInfo },
       ],
     }),
   ],
