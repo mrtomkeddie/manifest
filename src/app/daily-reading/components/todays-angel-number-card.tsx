@@ -1,5 +1,4 @@
 
-import { AngelNumberReading } from "@/ai/flows/get-daily-angel-number-readings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
@@ -26,7 +25,7 @@ export function TodaysAngelNumberCard({ number, meaning }: TodaysAngelNumberCard
             <CardContent className="flex-1 space-y-6 text-center">
                  <h2 className="text-6xl font-headline text-primary tracking-widest">{number}</h2>
                     <div className="mb-8">
-                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">Meaning</h3>
+                        <h3 className="font-bold tracking-wider uppercase text-foreground/70 text-sm mb-2">General Meaning</h3>
                         <p>{meaning.meaning}</p>
                     </div>
                         <div>
@@ -38,7 +37,7 @@ export function TodaysAngelNumberCard({ number, meaning }: TodaysAngelNumberCard
             </CardContent>
              <CardFooter>
                 <Button variant="link" asChild>
-                    <Link href="/angel-numbers">Look up a number</Link>
+                    <Link href="/angel-numbers">Look up other numbers</Link>
                 </Button>
             </CardFooter>
         </Card>
