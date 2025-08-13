@@ -39,6 +39,7 @@ const TarotCardOutputSchema = z.object({
 });
 
 const AngelNumberMeaningSchema = z.object({
+  topic: z.string(),
   meaning: z.string().describe('The spiritual meaning of the angel number in 2-3 concise sentences for a general topic.'),
   affirmation: z.string().describe('A short, powerful affirmation related to the number\'s meaning.'),
 });
@@ -129,6 +130,7 @@ const getDashboardDataFlow = ai.defineFlow(
         return { phaseName: "Celestial Haze", zodiacSign: "Mystery", description: "The celestial energies are swirling today. It's a good day for introspection.", imageKeywords: "night sky", ritual: "", affirmation: "", starsReading: "", combinedInsight: "" };
       }),
       ai.generate({
+          model: 'googleai/gemini-1.5-flash-latest',
           prompt: `You are a mystical tarot reader. Interpret the card **${card.name} (${orientation})** which has the core meaning: "${meaning}".
           
           You must provide:
