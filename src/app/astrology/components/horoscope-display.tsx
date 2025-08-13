@@ -15,8 +15,18 @@ type NatalChartData = GetNatalChartReadingOutput & {
     moonSign: string;
 };
 
+const dummyChartData: NatalChartData = {
+    headline: "The Visionary Pioneer",
+    sunSign: "Aries",
+    moonSign: "Sagittarius",
+    sunSignInterpretation: "Your Aries Sun gives you a bold, pioneering spirit. You are a natural leader, driven by a desire to initiate and conquer. Your core essence is fiery, courageous, and full of life force.",
+    moonSignInterpretation: "Your Sagittarius Moon fuels your emotional world with a thirst for adventure, knowledge, and freedom. You find comfort in exploration and your intuition speaks to you through grand visions and optimistic feelings.",
+    combinedInterpretation: "The fiery energy of your Aries Sun and Sagittarius Moon creates a powerfully dynamic and adventurous personality. You are here to explore new frontiers, both in the outer world and within your own mind. To balance these energies, channel your impulsive Aries nature with the wisdom-seeking Sagittarius spirit. Your greatest growth comes when you align your bold actions with a higher purpose."
+};
+
+
 export function HoroscopeDisplay() {
-  const [chartData, setChartData] = useState<NatalChartData | null>(null);
+  const [chartData, setChartData] = useState<NatalChartData | null>(dummyChartData);
   const [isLoading, setIsLoading] = useState(true);
   const [isProfileMissing, setIsProfileMissing] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -32,6 +42,7 @@ export function HoroscopeDisplay() {
             if (!storedProfile) {
                 setIsProfileMissing(true);
                 setIsLoading(false);
+                setChartData(null); // Ensure no data is shown if profile is missing
                 return;
             }
             
@@ -39,6 +50,7 @@ export function HoroscopeDisplay() {
             if (!profile.birthDate) {
                 setIsProfileMissing(true);
                 setIsLoading(false);
+                setChartData(null);
                 return;
             }
 
@@ -60,22 +72,25 @@ export function HoroscopeDisplay() {
                         description: "The spirits are busy. Please try again later.",
                         variant: 'destructive',
                     });
+                    setChartData(dummyChartData); // Show dummy data on AI failure
                 }
             });
 
         } catch (error) {
             console.error("Failed to load user profile or calculate chart", error);
             setIsProfileMissing(true);
+            setChartData(null);
         } finally {
             setIsLoading(false);
         }
     };
     
+    // We'll run this on mount, but keep the dummy data for now
     fetchNatalChart();
   }, [toast]);
   
   const renderContent = () => {
-    if (isLoading) {
+    if (isLoading && !chartData) {
         return (
              <div className="flex items-center gap-4 text-foreground/70 min-h-[200px] justify-center">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
