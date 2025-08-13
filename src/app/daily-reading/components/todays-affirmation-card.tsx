@@ -25,7 +25,7 @@ export function TodaysAffirmationCard({ affirmation }: TodaysAffirmationCardProp
             </CardContent>
             <CardFooter>
                 <Button variant="link" asChild>
-                    <Link href="/affirmations">Generate more affirmations</Link>
+                    <Link href="/affirmations">See all daily affirmations</Link>
                 </Button>
             </CardFooter>
         </Card>
