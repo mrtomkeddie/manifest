@@ -57,20 +57,10 @@ const GetDashboardDataOutputSchema = z.object({
     }),
     moonPhase: z.object({
       imageKeywords: z.string().describe('One or two keywords for generating an image of this moon phase, like "new moon" or "full moon".'),
-      moonReading: z.object({
-        phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
-        description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
-        ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
-        affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
-      }),
-      starsReading: z.object({
-        signAndAspects: z.string().describe('The current moon sign and any major planetary aspects (e.g., "Moon in Capricorn", "Moon in Aquarius square Uranus").'),
-        influence: z.string().describe("A 2-3 sentence explanation of how this sign’s energy affects emotions, intuition, and manifestation."),
-        practicalTip: z.string().describe('A 1-2 sentence practical tip based on the astrological influence.'),
-      }),
-      combinedReading: z.object({
-        insight: z.string().describe("A 1-2 sentence insight that merges the moon phase and astrological influence into a single 'what this means for you today' message."),
-      }),
+      phaseName: z.string().describe('The name of the moon phase (e.g., "New Moon", "Waxing Crescent").'),
+      description: z.string().describe("A 2-3 sentence spiritual interpretation of the moon phase's energy, taking hemisphere into account."),
+      ritual: z.string().describe("A short, simple ritual suggestion for this moon phase, tailored to the hemisphere."),
+      affirmation: z.string().describe('A short, powerful affirmation related to the phase\'s energy.'),
     }),
 });
 
@@ -119,14 +109,10 @@ Please generate:
 1.  **A Daily Reading:** A 4-6 sentence message in the style of a modern, empowering spiritual coach.
 2.  **A Daily Affirmation:** Generate an affirmation for 'confidence' along with a usage tip.
 3.  **A Daily Angel Number:** Provide a common angel number, its general spiritual meaning, and a related affirmation.
-4.  **A Moon & Stars Reading:**
-    -   First, determine the moon's zodiac sign for the given date: {{{date}}}.
+4.  **A Moon Phase Reading:**
     -   The calculated moon phase is "{{{phaseName}}}".
-    -   Provide a hemisphere-specific interpretation, ritual, and affirmation for this moon phase.
-    -   Based on the determined zodiac sign, provide the moon's sign and any major aspects for the date.
-    -   Provide an interpretation of the astrological influence and a practical tip.
-    -   Combine the moon and stars into a single, actionable insight.
-    -   Provide image keywords for the moon phase.
+    -   Provide a hemisphere-specific spiritual interpretation (2-3 sentences), a simple ritual, and a powerful affirmation for this moon phase.
+    -   Provide image keywords for the moon phase (e.g., "full moon", "waning crescent").
 
 Return everything in the specified JSON format, except for the tarot card which will be added separately.
 `,
