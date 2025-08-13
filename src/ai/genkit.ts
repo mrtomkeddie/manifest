@@ -1,32 +1,18 @@
 
-import { genkit, GenerationCommonConfigSchema } from 'genkit';
-import openAI from '@genkit-ai/compat-oai';
-import { ModelInfo } from 'genkit/model';
-import { z } from 'zod';
+import { genkit } from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
-const chatInfo: ModelInfo = {
-  label: 'DeepSeek Chat',
-  supports: { multiturn: true, tools: true, media: false, systemRole: true, output: ['text', 'json'] },
-};
-
-const reasonerInfo: ModelInfo = {
-  label: 'DeepSeek Reasoner',
-  supports: { multiturn: true, tools: true, media: false, systemRole: true, output: ['text', 'json'] },
-};
-const schema = GenerationCommonConfigSchema.extend({});
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error('GEMINI_API_KEY environment variable not set');
+}
 
 export const ai = genkit({
   plugins: [
-    openAI({
-      apiKey: process.env.DEEPSEEK_API_KEY!,
-      baseURL: process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com',
-      models: [
-        { name: 'deepseek-chat', info: chatInfo, configSchema: schema },
-        { name: 'deepseek-reasoner', info: reasonerInfo, configSchema: schema },
-      ],
+    googleAI({
+      apiKey: process.env.GEMINI_API_KEY,
     }),
   ],
-  model: 'openai/deepseek-chat',
+  logLevel: 'debug',
   telemetry: {
     instrumentation: {
       llm: true,

@@ -69,7 +69,7 @@ export async function getDailyAffirmations(): Promise<DailyAffirmationsOutput> {
 
 const prompt = ai.definePrompt({
   name: 'getDailyAffirmationsPrompt',
-  model: 'openai/deepseek-chat',
+  model: 'googleai/gemini-1.5-flash-latest',
   input: {schema: z.object({ categories: z.array(z.string()) })},
   output: {schema: DailyAffirmationsOutputSchema},
   prompt: `You are an affirmation generator and spiritual coach. For each category provided, please create a unique, powerful affirmation. Also provide a short, actionable tip for how the user can best integrate that specific affirmation into their day.
@@ -97,7 +97,7 @@ const getDailyAffirmationsFlow = ai.defineFlow(
         return output;
     } catch (error) {
         console.error("AI call for daily affirmations failed.", error);
-        throw new Error("Failed to generate daily affirmations from AI.");
+        throw error;
     }
   }
 );
