@@ -39,7 +39,7 @@ export async function getAngelNumberMeaning(input: AngelNumberInput): Promise<An
 
 const prompt = ai.definePrompt({
   name: 'getAngelNumberMeaningPrompt',
-  model: 'deepseek-chat',
+  model: 'openai/deepseek-chat',
   input: {schema: AngelNumberInputSchema},
   output: {schema: AngelNumberOutputSchema},
   prompt: `You are a spiritual guide and expert in numerology. A user has provided an angel number and is seeking its meaning in the context of several life topics.

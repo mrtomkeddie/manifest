@@ -26,7 +26,7 @@ export async function getDailyReading(): Promise<DailyReadingOutput> {
 
 const prompt = ai.definePrompt({
   name: 'getDailyReadingPrompt',
-  model: 'deepseek-chat',
+  model: 'openai/deepseek-chat',
   input: { schema: z.object({}) },
   output: {schema: DailyReadingOutputSchema},
   prompt: `You are a modern spiritual guide and manifestation coach. Your voice is that of a supportive, empowering best friend who also happens to be tapped into the universe. A user, a modern woman on her manifestation journey, has asked for her daily guidance.

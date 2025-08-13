@@ -4,7 +4,6 @@ import openAI from '@genkit-ai/compat-oai';
 import { ModelInfo } from 'genkit/model';
 import { z } from 'zod';
 
-// 1) Model capabilities (minimal but accurate for DeepSeek chat/reasoner)
 const chatInfo: ModelInfo = {
   label: 'DeepSeek Chat',
   supports: { multiturn: true, tools: true, media: false, systemRole: true, output: ['text', 'json'] },
@@ -24,9 +23,9 @@ export const ai = genkit({
         { name: 'deepseek-chat', info: chatInfo },
         { name: 'deepseek-reasoner', info: reasonerInfo },
       ],
-      model: 'deepseek-chat',
     }),
   ],
+  model: 'openai/deepseek-chat',
   telemetry: {
     instrumentation: {
       llm: true,

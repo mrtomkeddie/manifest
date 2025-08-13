@@ -97,7 +97,7 @@ export async function celticCrossReading(input: CelticCrossReadingInput): Promis
 
 const prompt = ai.definePrompt({
   name: 'celticCrossReadingPrompt',
-  model: 'deepseek-chat',
+  model: 'openai/deepseek-chat',
   input: {schema: z.object({
     topic: z.string(),
     cards: z.array(InternalCardReadingSchema),
