@@ -60,7 +60,7 @@ const prompt = ai.definePrompt({
   - In the **Northern Hemisphere**, the moon "waxes" (grows) from right to left. The energy is about building, growth, and manifestation.
   - In the **Southern Hemisphere**, the moon "waxes" (grows) from left to right. This hemisphere's traditions often associate the waxing visual with the waning energy of release, introspection, and letting go. The spiritual interpretation must be different.
 
-  Please provide a reading structured as follows, with every part focused on **MANIFESTATION**:
+  Please provide a reading structured as a valid JSON object. Do not add any conversational text. The JSON object must contain the following keys:
     -   **phaseName**: Confirm the phase name: "{{{phaseName}}}".
     -   **zodiacSign**: Confirm the zodiac sign: "{{{zodiacSign}}}".
     -   **description**: A 2-3 sentence spiritual interpretation of the energy of that phase, focused on how it impacts manifestation.
@@ -68,10 +68,9 @@ const prompt = ai.definePrompt({
     -   **ritual**: A simple, actionable manifestation ritual suggestion that combines the energies of both the moon phase and the zodiac sign.
     -   **affirmation**: A short, powerful manifestation-focused affirmation that aligns with the combined energy.
     -   **combinedInsight**: A 2-3 sentence summary synthesizing the moon phase and zodiac sign's influence into a single piece of actionable guidance for manifesting desires.
+    -   **imageKeywords**: Provide one or two keywords for the moon phase (e.g., "full moon", "waning crescent").
   
-  Finally, provide **imageKeywords** for the moon phase (e.g., "full moon", "waning crescent").
-  
-  Return the information in the specified format. Do not add any conversational text.`,
+  Return ONLY the JSON object in the specified format.`,
 });
 
 const getMoonPhaseFlow = ai.defineFlow(
