@@ -30,7 +30,12 @@ const profileFormSchema = z.object({
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-const defaultValues: Partial<ProfileFormValues> = {};
+const defaultValues: ProfileFormValues = {
+  name: '',
+  birthDate: new Date(),
+  birthTime: '12:00',
+  birthPlace: '',
+};
 
 const years = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i);
 const months = Array.from({ length: 12 }, (_, i) => ({ value: i, label: new Date(0, i).toLocaleString('default', { month: 'long' }) }));
