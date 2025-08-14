@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -30,12 +30,12 @@ const profileFormSchema = z.object({
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-const defaultValues: ProfileFormValues = {
+const getInitialValues = (): ProfileFormValues => ({
   name: '',
   birthDate: new Date(),
   birthTime: '12:00',
   birthPlace: '',
-};
+});
 
 const years = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i);
 const months = Array.from({ length: 12 }, (_, i) => ({ value: i, label: new Date(0, i).toLocaleString('default', { month: 'long' }) }));
@@ -46,7 +46,7 @@ export function UserProfileForm() {
   const { toast } = useToast();
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: getInitialValues(),
     mode: 'onChange',
   });
   
@@ -57,6 +57,7 @@ export function UserProfileForm() {
         const storedProfile = localStorage.getItem('userProfile');
         if (storedProfile) {
             const parsedProfile = JSON.parse(storedProfile);
+            // Ensure birthDate is a Date object
             if(parsedProfile.birthDate) {
                 parsedProfile.birthDate = new Date(parsedProfile.birthDate);
             }
@@ -112,7 +113,7 @@ export function UserProfileForm() {
                         render={({ field }) => (
                            <FormItem>
                                 <FormLabel>Date of Birth</FormLabel>
-                                <div className="flex gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4">
                                      <Select
                                         value={birthDateValue ? String(birthDateValue.getFullYear()) : ''}
                                         onValueChange={(val) => handleDateChange('year', val)}
