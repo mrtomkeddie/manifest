@@ -95,7 +95,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
           
           <div className="relative z-10 flex flex-col items-center space-y-8">
-            <h1 className="text-5xl md:text-7xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-br from-gray-200 to-gray-400 leading-tight">
               Manifesting Like a <span className="text-primary">Goddess</span>
             </h1>
             <p className="max-w-2xl text-lg md:text-xl text-foreground/80">

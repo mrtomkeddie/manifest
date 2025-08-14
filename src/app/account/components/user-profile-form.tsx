@@ -32,7 +32,7 @@ export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const getInitialValues = (): ProfileFormValues => ({
   name: '',
-  birthDate: new Date(),
+  birthDate: new Date(1990, 0, 1),
   birthTime: '12:00',
   birthPlace: '',
 });
@@ -113,7 +113,7 @@ export function UserProfileForm() {
                         render={({ field }) => (
                            <FormItem>
                                 <FormLabel>Date of Birth</FormLabel>
-                                <div className="flex flex-col sm:flex-row gap-4">
+                                <div className="flex flex-col sm:flex-row gap-2">
                                      <Select
                                         value={birthDateValue ? String(birthDateValue.getFullYear()) : ''}
                                         onValueChange={(val) => handleDateChange('year', val)}

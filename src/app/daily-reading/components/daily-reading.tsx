@@ -13,7 +13,7 @@ export async function DailyReading() {
   const dashboardData = await getDashboardData({ date: format(new Date(), 'yyyy-MM-dd'), isNorthernHemisphere: true });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="lg:col-span-2">
         <DailyReadingCard reading={dashboardData.dailyReading.reading} />
       </div>

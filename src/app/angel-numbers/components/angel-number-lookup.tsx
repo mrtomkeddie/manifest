@@ -1,4 +1,5 @@
 
+
 'use client';
 import { useState, useTransition } from 'react';
 import { getAngelNumberMeaning, type AngelNumberOutput } from '@/ai/flows/get-angel-number-meaning';
@@ -51,7 +52,7 @@ export function AngelNumberLookup({ dailyNumber }: { dailyNumber: string }) {
     <div className="w-full">
       <Card className="w-full bg-card/50 border-primary/20 shadow-xl shadow-primary/5">
         <CardHeader>
-          <div className="flex w-full gap-2">
+          <div className="flex flex-col sm:flex-row w-full gap-2">
             <Input
               type="text"
               value={number}
@@ -76,7 +77,7 @@ export function AngelNumberLookup({ dailyNumber }: { dailyNumber: string }) {
             </div>
           )}
           {!isPending && result && (
-            <div className="w-full p-6 text-base text-center text-foreground/90 animate-in fade-in duration-500 min-h-[300px] space-y-8">
+            <div className="w-full p-4 sm:p-6 text-base text-center text-foreground/90 animate-in fade-in duration-500 min-h-[300px] space-y-8">
               <h2 className="text-6xl font-headline text-primary tracking-widest mb-8">{number}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {result.readings.map((reading) => (
